@@ -34,6 +34,7 @@ from courseware.courses import get_course_by_id, get_studio_url
 from django_comment_client.utils import has_forum_access
 from django_comment_common.models import FORUM_ROLE_ADMINISTRATOR
 from student.models import CourseEnrollment
+from sudo.views import redirect_to_sudo
 from shoppingcart.models import Coupon, PaidCourseRegistration, CourseRegCodeItem
 from course_modes.models import CourseMode, CourseModesArchive
 from student.roles import CourseFinanceAdminRole, CourseSalesAdminRole
@@ -69,6 +70,8 @@ class InstructorDashboardTab(CourseTab):
 @cache_control(no_cache=True, no_store=True, must_revalidate=True)
 def instructor_dashboard_2(request, course_id):
     """ Display the instructor dashboard for a course. """
+    if not request.is_sudo(course_id):
+        return redirect_to_sudo(request.get_full_path(), region=course_id)
     try:
         course_key = CourseKey.from_string(course_id)
     except InvalidKeyError:
