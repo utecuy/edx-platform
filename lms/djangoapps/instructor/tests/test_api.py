@@ -286,6 +286,7 @@ class TestInstructorAPIDenyLevels(ModuleStoreTestCase, LoginEnrollmentTestCase):
         CourseEnrollment.enroll(staff_member, self.course.id)
         CourseFinanceAdminRole(self.course.id).add_users(staff_member)
         self.client.login(username=staff_member.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         # Try to promote to forums admin - not working
         # update_forum_role(self.course.id, staff_member, FORUM_ROLE_ADMINISTRATOR, 'allow')
 
@@ -308,6 +309,26 @@ class TestInstructorAPIDenyLevels(ModuleStoreTestCase, LoginEnrollmentTestCase):
                 "Staff member should not be allowed to access endpoint " + endpoint
             )
 
+    def test_staff_level_without_sudo_access(self):
+        """
+        Ensure that a staff member redirected to sudo password page without sudo access.
+        """
+        staff_member = StaffFactory(course_key=self.course.id)
+        CourseEnrollment.enroll(staff_member, self.course.id)
+        CourseFinanceAdminRole(self.course.id).add_users(staff_member)
+        self.client.login(username=staff_member.username, password='test')
+
+        for endpoint, args in self.staff_level_endpoints:
+            # # TODO: make these work
+            if endpoint in ['update_forum_role_membership', 'proxy_legacy_analytics', 'list_forum_members']:
+                continue
+            self._access_endpoint(
+                endpoint,
+                args,
+                302,
+                ""
+            )
+
     def test_instructor_level(self):
         """
         Ensure that an instructor member can access all endpoints.
@@ -317,6 +338,7 @@ class TestInstructorAPIDenyLevels(ModuleStoreTestCase, LoginEnrollmentTestCase):
 
         CourseFinanceAdminRole(self.course.id).add_users(inst)
         self.client.login(username=inst.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         for endpoint, args in self.staff_level_endpoints:
             # TODO: make these work
@@ -340,6 +362,37 @@ class TestInstructorAPIDenyLevels(ModuleStoreTestCase, LoginEnrollmentTestCase):
                 "Instructor should be allowed to access endpoint " + endpoint
             )
 
+    def test_instructor_level_without_sudo_access(self):
+        """
+        Ensure that an instructor member redirected to sudo password page without sudo access.
+        """
+        inst = InstructorFactory(course_key=self.course.id)
+        CourseEnrollment.enroll(inst, self.course.id)
+        CourseFinanceAdminRole(self.course.id).add_users(inst)
+        self.client.login(username=inst.username, password='test')
+
+        for endpoint, args in self.staff_level_endpoints:
+            # TODO: make these work
+            if endpoint in ['update_forum_role_membership', 'proxy_legacy_analytics']:
+                continue
+            self._access_endpoint(
+                endpoint,
+                args,
+                302,
+                ""
+            )
+
+        for endpoint, args in self.instructor_level_endpoints:
+            # TODO: make this work
+            if endpoint in ['rescore_problem']:
+                continue
+            self._access_endpoint(
+                endpoint,
+                args,
+                302,
+                ""
+            )
+
 
 @attr('shard_1')
 @patch.dict(settings.FEATURES, {'ALLOW_AUTOMATED_SIGNUPS': True})
@@ -354,6 +407,7 @@ class TestInstructorAPIBulkAccountCreationAndEnrollment(ModuleStoreTestCase, Log
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         self.url = reverse('register_and_enroll_students', kwargs={'course_id': self.course.id.to_deprecated_string()})
 
         self.not_enrolled_student = UserFactory(
@@ -658,6 +712,7 @@ class TestInstructorAPIEnrollment(ModuleStoreTestCase, LoginEnrollmentTestCase):
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         self.enrolled_student = UserFactory(username='EnrolledStudent', first_name='Enrolled', last_name='Student')
         CourseEnrollment.enroll(
@@ -1234,6 +1289,7 @@ class TestInstructorAPIEnrollment(ModuleStoreTestCase, LoginEnrollmentTestCase):
         manually enrolling the students for the paid courses.
         """
         paid_course = self.create_paid_course()
+        self.grant_sudo_access(unicode(paid_course.id), 'test')
         url = reverse('students_update_enrollment', kwargs={'course_id': paid_course.id.to_deprecated_string()})
         params = {'identifiers': self.notregistered_email, 'action': 'enroll', 'email_students': False,
                   'auto_enroll': False}
@@ -1259,6 +1315,7 @@ class TestInstructorAPIEnrollment(ModuleStoreTestCase, LoginEnrollmentTestCase):
         test to unenroll allow to enroll user.
         """
         paid_course = self.create_paid_course()
+        self.grant_sudo_access(unicode(paid_course.id), 'test')
         url = reverse('students_update_enrollment', kwargs={'course_id': paid_course.id.to_deprecated_string()})
         params = {'identifiers': self.notregistered_email, 'action': 'enroll', 'email_students': False,
                   'auto_enroll': False, 'reason': 'testing..'}
@@ -1309,6 +1366,7 @@ class TestInstructorAPIEnrollment(ModuleStoreTestCase, LoginEnrollmentTestCase):
         test unenrolled user already not enrolled in a course.
         """
         paid_course = self.create_paid_course()
+        self.grant_sudo_access(unicode(paid_course.id), 'test')
         course_enrollment = CourseEnrollment.objects.filter(
             user__email=self.notregistered_email, course_id=paid_course.id
         )
@@ -1406,6 +1464,7 @@ class TestInstructorAPIBulkBetaEnrollment(ModuleStoreTestCase, LoginEnrollmentTe
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         self.beta_tester = BetaTesterFactory(course_key=self.course.id)
         CourseEnrollment.enroll(
@@ -1734,6 +1793,7 @@ class TestInstructorAPILevelsAccess(ModuleStoreTestCase, LoginEnrollmentTestCase
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         self.other_instructor = InstructorFactory(course_key=self.course.id)
         self.other_staff = StaffFactory(course_key=self.course.id)
@@ -1972,6 +2032,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
         self.course_mode.save()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         self.cart = Order.get_cart_for_user(self.instructor)
         self.coupon_code = 'abcde'
         self.coupon = Coupon(code=self.coupon_code, description='testing code', course_id=self.course.id,
@@ -2399,6 +2460,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
         UserProfileFactory.create(user=self.students[0], meta='{"company": "asdasda"}')
 
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         url = reverse('get_enrollment_report', kwargs={'course_id': self.course.id.to_deprecated_string()})
         response = self.client.get(url, {})
         self.assertIn('Your detailed enrollment report is being generated!', response.content)
@@ -2448,6 +2510,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
 
         CourseFinanceAdminRole(self.course.id).add_users(self.instructor)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         url = reverse('get_enrollment_report', kwargs={'course_id': self.course.id.to_deprecated_string()})
         response = self.client.get(url, {})
@@ -2470,6 +2533,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
 
         CourseFinanceAdminRole(self.course.id).add_users(self.instructor)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         url = reverse('get_enrollment_report', kwargs={'course_id': self.course.id.to_deprecated_string()})
         response = self.client.get(url, {})
@@ -2495,6 +2559,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
 
         CourseFinanceAdminRole(self.course.id).add_users(self.instructor)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         url = reverse('get_enrollment_report', kwargs={'course_id': self.course.id.to_deprecated_string()})
         response = self.client.get(url, {})
@@ -2690,6 +2755,7 @@ class TestInstructorAPIRegradeTask(ModuleStoreTestCase, LoginEnrollmentTestCase)
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         self.student = UserFactory()
         CourseEnrollment.enroll(self.student, self.course.id)
@@ -2859,6 +2925,8 @@ class TestEntranceExamInstructorAPIRegradeTask(ModuleStoreTestCase, LoginEnrollm
         # Add instructor to invalid ee course
         CourseInstructorRole(self.course_with_invalid_ee.id).add_users(self.instructor)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course_with_invalid_ee.id), 'test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         self.student = UserFactory()
         CourseEnrollment.enroll(self.student, self.course.id)
@@ -2968,6 +3036,7 @@ class TestEntranceExamInstructorAPIRegradeTask(ModuleStoreTestCase, LoginEnrollm
         self.client.logout()
         staff_user = StaffFactory(course_key=self.course.id)
         self.client.login(username=staff_user.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         url = reverse('reset_student_attempts_for_entrance_exam',
                       kwargs={'course_id': unicode(self.course.id)})
         response = self.client.get(url, {
@@ -3098,6 +3167,7 @@ class TestInstructorSendEmail(ModuleStoreTestCase, LoginEnrollmentTestCase):
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         test_subject = u'\u1234 test subject'
         test_message = u'\u6824 test message'
         self.full_test_message = {
@@ -3223,6 +3293,7 @@ class TestInstructorAPITaskLists(ModuleStoreTestCase, LoginEnrollmentTestCase):
         )
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
         self.student = UserFactory()
         CourseEnrollment.enroll(self.student, self.course.id)
@@ -3339,6 +3410,7 @@ class TestInstructorEmailContentList(ModuleStoreTestCase, LoginEnrollmentTestCas
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         self.tasks = {}
         self.emails = {}
         self.emails_info = {}
@@ -3486,6 +3558,7 @@ class TestInstructorAPIAnalyticsProxy(ModuleStoreTestCase, LoginEnrollmentTestCa
         self.course = CourseFactory.create()
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
     @ddt.data((ModuleStoreEnum.Type.mongo, False), (ModuleStoreEnum.Type.split, True))
     @ddt.unpack
@@ -3496,6 +3569,7 @@ class TestInstructorAPIAnalyticsProxy(ModuleStoreTestCase, LoginEnrollmentTestCa
             course = CourseFactory.create()
             instructor_local = InstructorFactory(course_key=course.id)
             self.client.login(username=instructor_local.username, password='test')
+            self.grant_sudo_access(unicode(course.id), 'test')
 
             act.return_value = self.FakeProxyResponse()
 
@@ -3742,6 +3816,7 @@ class TestDueDateExtensions(ModuleStoreTestCase, LoginEnrollmentTestCase):
 
         self.instructor = InstructorFactory(course_key=course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
 
     def test_change_due_date(self):
         url = reverse('change_due_date', kwargs={'course_id': self.course.id.to_deprecated_string()})
@@ -3866,6 +3941,7 @@ class TestCourseRegistrationCodes(ModuleStoreTestCase):
         CourseModeFactory.create(course_id=self.course.id, min_price=50)
         self.instructor = InstructorFactory(course_key=self.course.id)
         self.client.login(username=self.instructor.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         CourseSalesAdminRole(self.course.id).add_users(self.instructor)
 
         url = reverse('generate_registration_codes',
@@ -4341,6 +4417,7 @@ class TestBulkCohorting(ModuleStoreTestCase):
         Verify that we get the error we expect for a given file input.
         """
         self.client.login(username=self.staff_user.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         response = self.call_add_users_to_cohorts(file_content, suffix=file_suffix)
         self.assertEqual(response.status_code, 400)
         result = json.loads(response.content)
@@ -4354,6 +4431,7 @@ class TestBulkCohorting(ModuleStoreTestCase):
         """
         mock_store_upload.return_value = (None, 'fake_file_name.csv')
         self.client.login(username=self.staff_user.username, password='test')
+        self.grant_sudo_access(unicode(self.course.id), 'test')
         response = self.call_add_users_to_cohorts(file_content)
         self.assertEqual(response.status_code, 204)
         self.assertTrue(mock_store_upload.called)
