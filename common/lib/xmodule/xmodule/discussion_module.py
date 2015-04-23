@@ -69,14 +69,11 @@ class DiscussionModule(DiscussionFields, XModule):
     js_module_name = "InlineDiscussion"
 
     def get_html(self):
-        from django.contrib.auth.models import User
         course = self.get_course()
         user = None
         user_service = self.runtime.service(self, 'user')
         if user_service:
-            user_id = user_service.get_current_user().opt_attrs.get('edx-platform.user_id', None)
-            if user_id:
-                user = User.objects.get(id=user_id)
+            user = user_service._django_user  # pylint: disable=protected-access
         if user:
             can_create_comment = has_permission(user, "create_comment", course.id)
             can_create_subcomment = has_permission(user, "create_sub_comment", course.id)
