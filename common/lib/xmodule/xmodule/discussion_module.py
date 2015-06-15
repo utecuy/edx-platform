@@ -79,9 +79,9 @@ class DiscussionModule(DiscussionFields, XModule):
             can_create_subcomment = has_permission(user, "create_sub_comment", course.id)
             can_create_thread = has_permission(user, "create_thread", course.id)
         else:
-            can_create_comment = True
-            can_create_subcomment = True
-            can_create_thread = True
+            can_create_comment = False
+            can_create_subcomment = False
+            can_create_thread = False
         context = {
             'discussion_id': self.discussion_id,
             'course': course,
