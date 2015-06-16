@@ -277,10 +277,10 @@ def forum_form_discussion(request, course_key):
             'thread_pages': query_params['num_pages'],
             'user_info': _attr_safe_json(user_info),
             'can_create_comment': _attr_safe_json(
-                cached_has_permission(request.user, "create_comment", course.id)),
+                has_permission(request.user, "create_comment", course.id)),
             'can_create_subcomment': _attr_safe_json(
-                cached_has_permission(request.user, "create_sub_comment", course.id)),
-            'can_create_thread': cached_has_permission(request.user, "create_thread", course.id),
+                has_permission(request.user, "create_sub_comment", course.id)),
+            'can_create_thread': has_permission(request.user, "create_thread", course.id),
             'flag_moderator': (
                 has_permission(request.user, 'openclose_thread', course.id) or
                 has_access(request.user, 'staff', course)
@@ -381,10 +381,10 @@ def single_thread(request, course_key, discussion_id, thread_id):
             'init': '',   # TODO: What is this?
             'user_info': _attr_safe_json(user_info),
             'can_create_comment': _attr_safe_json(
-                cached_has_permission(request.user, "create_comment", course.id)),
+                has_permission(request.user, "create_comment", course.id)),
             'can_create_subcomment': _attr_safe_json(
-                cached_has_permission(request.user, "create_sub_comment", course.id)),
-            'can_create_thread': cached_has_permission(request.user, "create_thread", course.id),
+                has_permission(request.user, "create_sub_comment", course.id)),
+            'can_create_thread': has_permission(request.user, "create_thread", course.id),
             'annotated_content_info': _attr_safe_json(annotated_content_info),
             'course': course,
             #'recent_active_threads': recent_active_threads,
