@@ -2,6 +2,7 @@
 <%! import json %>
 
 <script type="text/javascript">
+window.PLATFORM_NAME = ${json.dumps(settings.PLATFORM_NAME)};
 window.ENABLE_DISCUSSION_HOME_PANEL = ${json.dumps(settings.FEATURES.get('ENABLE_DISCUSSION_HOME_PANEL', False))};
 </script>
 
