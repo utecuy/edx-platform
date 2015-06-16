@@ -1,9 +1,13 @@
 <div class="discussion-response"></div>
 <a href="#" class="action-show-comments">
-    <%- interpolate("Show Comments (%(num_comments)s)",
-        {num_comments: comments.length},
-        true
-    ) %>
+    <%
+    var fmts = ngettext(
+        "Show Comment (%(num_comments)s)",
+        "Show Comments (%(num_comments)s)",
+        comments.length
+    );
+    print(interpolate(fmts, {num_comments: comments.length}, true));
+    %>
     <i class="icon fa fa-caret-down"></i>
 </a>
 <ol class="comments">
