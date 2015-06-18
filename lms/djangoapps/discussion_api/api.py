@@ -226,7 +226,15 @@ def get_course_topics(request, course_key):
     }
 
 
-def get_thread_list(request, course_key, page, page_size, topic_id_list=None, text_search=None, following=False):
+def get_thread_list(
+        request,
+        course_key,
+        page,
+        page_size,
+        topic_id_list=None,
+        text_search=None,
+        following=False,
+        view=None):
     """
     Return the list of all discussion threads pertaining to the given course
 
@@ -239,6 +247,7 @@ def get_thread_list(request, course_key, page, page_size, topic_id_list=None, te
     topic_id_list: The list of topic_ids to get the discussion threads for
     text_search A text search query string to match
     following: If true, retrieve only threads the requester is following
+    view: "unread" and/or "unanswered" to retrieve such threads
 
     Note that topic_id_list, text_search, and following are mutually exclusive.
 
@@ -261,6 +270,7 @@ def get_thread_list(request, course_key, page, page_size, topic_id_list=None, te
     course = _get_course_or_404(course_key, request.user)
     context = get_context(course, request)
     query_params = {
+        "user_id": request.user.id,
         "group_id": (
             None if context["is_requester_privileged"] else
             get_cohort_id(request.user, course.id)
@@ -271,6 +281,10 @@ def get_thread_list(request, course_key, page, page_size, topic_id_list=None, te
         "per_page": page_size,
         "text": text_search,
     }
+
+    query_params["unanswered"] = True if "unanswered" in view else False
+    query_params["unread"] = True if "unread" in view else False
+
     text_search_rewrite = None
     if following:
         threads, result_page, num_pages = context["cc_requester"].subscribed_threads(query_params)
