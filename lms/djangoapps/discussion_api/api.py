@@ -223,7 +223,16 @@ def get_course_topics(request, course_key):
     }
 
 
-def get_thread_list(request, course_key, page, page_size, topic_id_list=None, text_search=None):
+def get_thread_list(
+        request,
+        course_key,
+        page,
+        page_size,
+        topic_id_list=None,
+        text_search=None,
+        order_by=None,
+        order_direction=None,
+):
     """
     Return the list of all discussion threads pertaining to the given course
 
@@ -235,6 +244,9 @@ def get_thread_list(request, course_key, page, page_size, topic_id_list=None, te
     page_size: The number of threads to retrieve per page
     topic_id_list: The list of topic_ids to get the discussion threads for
     text_search A text search query string to match
+    order_by: The key in which to sort the threads by. The only values are
+        "last_activity_at", "comment_count", and "vote_count".
+    order_direction: The direction in which to sort the threads by
 
     Note that topic_id_list and text_search are mutually exclusive.
 
@@ -257,6 +269,13 @@ def get_thread_list(request, course_key, page, page_size, topic_id_list=None, te
     course = _get_course_or_404(course_key, request.user)
     context = get_context(course, request)
     topic_ids_csv = ",".join(topic_id_list) if topic_id_list else None
+
+    # Pseudo code until editable fields PR gets merged:
+    if order_by:
+        cc_map = {"last_activity_at": "activity", "comment_count": "comments", "vote_count": "votes"}
+        query_params["sort_key"] = cc_map[order_by]
+        query_params["sort_direction"] = order_direction if order_direction else "desc"
+
     threads, result_page, num_pages, text_search_rewrite = Thread.search({
         "course_id": unicode(course.id),
         "group_id": (
