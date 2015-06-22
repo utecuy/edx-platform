@@ -14,7 +14,7 @@ from django.core.cache import cache
 import dogstats_wrapper as dog_stats_api
 
 from courseware import courses
-from courseware.model_data import FieldDataCache
+from courseware.model_data import FieldDataCache, ScoresClient
 from student.models import anonymous_id_for_user
 from util.module_utils import yield_dynamic_descriptor_descendants
 from xmodule import graders
@@ -145,6 +145,13 @@ def field_data_cache_for_grading(course, user):
         course.id, user, course, depth=None, descriptor_filter=descriptor_affects_grading
     )
 
+def scores_client_for_grading(course, user, fd_cache):
+    client = ScoresClient(course.id, user.id)
+    client.fetch_from_remote(
+        descriptor.id for descriptor in fd_cache.descriptors if descriptor.has_score
+    )
+    return client
+
 
 def answer_distributions(course_key):
     """
@@ -238,14 +245,14 @@ def answer_distributions(course_key):
 
 
 @transaction.commit_manually
-def grade(student, request, course, keep_raw_scores=False, field_data_cache=None):
+def grade(student, request, course, keep_raw_scores=False, field_data_cache=None, scores_client=None):
     """
     Wraps "_grade" with the manual_transaction context manager just in case
     there are unanticipated errors.
     Send a signal to update the minimum grade requirement status.
     """
     with manual_transaction():
-        grade_summary = _grade(student, request, course, keep_raw_scores, field_data_cache)
+        grade_summary = _grade(student, request, course, keep_raw_scores, field_data_cache, scores_client)
         responses = GRADES_UPDATED.send_robust(
             sender=None,
             username=request.user.username,
@@ -260,7 +267,7 @@ def grade(student, request, course, keep_raw_scores=False, field_data_cache=None
         return grade_summary
 
 
-def _grade(student, request, course, keep_raw_scores, field_data_cache):
+def _grade(student, request, course, keep_raw_scores, field_data_cache, scores_client):
     """
     Unwrapped version of "grade"
 
@@ -284,6 +291,8 @@ def _grade(student, request, course, keep_raw_scores, field_data_cache):
     if field_data_cache is None:
         with manual_transaction():
             field_data_cache = field_data_cache_for_grading(course, student)
+    if scores_client is None:
+        scores_client = scores_client_for_grading(course, student, field_data_cache)
 
     # Dict of item_ids -> (earned, possible) point tuples. This *only* grabs
     # scores that were registered with the submissions API, which for the moment
@@ -436,19 +445,19 @@ def grade_for_percentage(grade_cutoffs, percentage):
 
 
 @transaction.commit_manually
-def progress_summary(student, request, course, field_data_cache=None):
+def progress_summary(student, request, course, field_data_cache=None, scores_client=None):
     """
     Wraps "_progress_summary" with the manual_transaction context manager just
     in case there are unanticipated errors.
     """
     with manual_transaction():
-        return _progress_summary(student, request, course, field_data_cache)
+        return _progress_summary(student, request, course, field_data_cache, scores_client)
 
 
 # TODO: This method is not very good. It was written in the old course style and
 # then converted over and performance is not good. Once the progress page is redesigned
 # to not have the progress summary this method should be deleted (so it won't be copied).
-def _progress_summary(student, request, course, field_data_cache=None):
+def _progress_summary(student, request, course, field_data_cache=None, scores_client=None):
     """
     Unwrapped version of "progress_summary".
 
@@ -472,6 +481,8 @@ def _progress_summary(student, request, course, field_data_cache=None):
     with manual_transaction():
         if field_data_cache is None:
             field_data_cache = field_data_cache_for_grading(course, student)
+        if scores_client is None:
+            scores_client = scores_client_for_grading(course, student, field_data_cache)
 
         course_module = get_module_for_descriptor(
             student, request, course, field_data_cache, course.id, course=course

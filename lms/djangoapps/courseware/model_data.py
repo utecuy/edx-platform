@@ -23,7 +23,7 @@ DjangoOrmFieldCache: A base-class for single-row-per-field caches.
 
 import json
 from abc import abstractmethod, ABCMeta
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from .models import (
     StudentModule,
     XModuleUserStateSummaryField,
@@ -717,9 +717,6 @@ class FieldDataCache(object):
         select_for_update: Ignored
         asides: The list of aside types to load, or None to prefetch no asides.
         """
-        self.select_for_update = select_for_update
-        self.locations_to_scores = {}
-
         if asides is None:
             self.asides = []
         else:
@@ -758,16 +755,6 @@ class FieldDataCache(object):
                     continue
 
                 self.cache[scope].cache_fields(fields, descriptors, self.asides)
-                for field_object in self._retrieve_fields(scope, fields, descriptors):
-                    cache_key = self._cache_key_from_field_object(scope, field_object)
-                    self.cache[cache_key] = field_object
-                    if scope == Scope.user_state:
-                        # In this case, field_object is a StudentModule. We take the location value
-                        # from the cache_key instead of field_object.module_state_key because the
-                        # latter does not have run information and won't match against the locations
-                        # we get when crawling the course.
-                        _scope, location = cache_key  # pylint:disable=unbalanced-tuple-unpacking
-                        self.locations_to_scores[location] = field_object  # This is a StudentModule
 
     def add_descriptor_descendents(self, descriptor, depth=None, descriptor_filter=lambda descriptor: True):
         """
@@ -970,3 +957,38 @@ class FieldDataCache(object):
 
     def __len__(self):
         return sum(len(cache) for cache in self.cache.values())
+
+
+class ScoresClient(object):
+
+    Score = namedtuple('Score', 'correct total')
+
+    def __init__(self, course_key, user_id):
+        self.course_key = course_key
+        self.user_id = user_id
+        self._locations_to_scores = {}
+
+    def fetch_scores(self, locations):
+        scores_qset = StudentModule.objects.filter(
+            student_id=self.user_id,
+            course_id=self.course_key,
+            module_state_key__in=set(locations),
+        )
+        # Locations in StudentModule don't necessarily have course key info
+        # attached to them (since old mongo identifiers don't include runs).
+        # So we have to add that info back in before we put it into our lookup.
+        self._locations_to_scores.update({
+            location.map_into_course(course_key): ScoresClient.Score(correct, total)
+            for location, correct, total
+            in scores_qset.values_list('module_state_key', 'grade', 'max_grade')
+        })
+
+    def get(self, location):
+        return self._locations_to_scores.get(location)
+
+    @classmethod
+    def from_field_data_cache(cls, fd_cache):
+        client = cls(fd_cache.course_id, fd_cache.user.id)
+        client.fetch_from_remote(
+            descriptor.id for descriptor in fd_cache.descriptors if descriptor.has_score
+        )

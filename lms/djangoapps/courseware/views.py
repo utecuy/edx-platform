@@ -1055,9 +1055,14 @@ def _progress(request, course_key, student_id):
     # additional DB lookup (this kills the Progress page in particular).
     student = User.objects.prefetch_related("groups").get(id=student.id)
     field_data_cache = grades.field_data_cache_for_grading(course, student)
-    courseware_summary = grades.progress_summary(student, request, course, field_data_cache)
+    scores_client = grades.scores_client_for_grading(course, student, field_data_cache)
+    courseware_summary = grades.progress_summary(
+        student, request, course, field_data_cache=field_data_cache, scores_client=scores_client
+    )
+    grade_summary = grades.grade(
+        student, request, course, field_data_cache=field_data_cache, scores_client=scores_client
+    )
     studio_url = get_studio_url(course, 'settings/grading')
-    grade_summary = grades.grade(student, request, course, field_data_cache=field_data_cache)
 
     if courseware_summary is None:
         #This means the student didn't have access to the course (which the instructor requested)
