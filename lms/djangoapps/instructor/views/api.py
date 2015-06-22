@@ -1107,12 +1107,14 @@ def get_students_features(request, course_id, csv=False):  # pylint: disable=red
     else:
         try:
             instructor_task.api.submit_calculate_students_features_csv(request, course_key, query_features)
-            success_status = _("The enrolled learner profile report is being created. To view the status of the report, see Pending Instructor Tasks below.")
+            success_status = _("The enrolled learner profile report is being created." 
+                               "To view the status of the report, see Pending Instructor Tasks below.")
             return JsonResponse({"status": success_status})
         except AlreadyRunningError:
             already_running_status = _(
             	"This enrollment report is currently being created."
-            	"To view the status of the report, see Pending Instructor Tasks below. You will be able to download the report when it is complete.")
+            	"To view the status of the report, see Pending Instructor Tasks below." 
+                "You will be able to download the report when it is complete.")
             return JsonResponse({"status": already_running_status})
 
 
@@ -1140,7 +1142,8 @@ def get_students_who_may_enroll(request, course_id):
     except AlreadyRunningError:
         already_running_status = _(
             "This enrollment report is currently being created."
-            "To view the status of the report, see Pending Instructor Tasks below. You will be able to download the report when it is complete."
+            "To view the status of the report, see Pending Instructor Tasks below."
+            "You will be able to download the report when it is complete."
         )
         return JsonResponse({"status": already_running_status})
 
@@ -1235,7 +1238,8 @@ def get_enrollment_report(request, course_id):
         return JsonResponse({"status": success_status})
     except AlreadyRunningError:
         already_running_status = _("The detailed enrollment report is being created."
-                                   "To view the status of the report, see Pending Instructor Tasks below. You will be able to download the report when it is complete.")
+                                   "To view the status of the report, see Pending Instructor Tasks below." 
+                                   "You will be able to download the report when it is complete.")
         return JsonResponse({
             "status": already_running_status
         })
@@ -1257,7 +1261,8 @@ def get_exec_summary_report(request, course_id):
     except AlreadyRunningError:
         status_response = _(
             "The executive summary report is currently being created."
-            "To view the status of the report, see Pending Instructor Tasks below. You will be able to download the report when it is complete."
+            "To view the status of the report, see Pending Instructor Tasks below."
+            "You will be able to download the report when it is complete."
         )
     return JsonResponse({
         "status": status_response
@@ -2136,7 +2141,8 @@ def calculate_grades_csv(request, course_id):
         return JsonResponse({"status": success_status})
     except AlreadyRunningError:
         already_running_status = _("The grade report is currently being created."
-                                   "To view the status of the report, see Pending Instructor Tasks below. You will be able to download the report when it is complete.")
+                                   "To view the status of the report, see Pending Instructor Tasks below."
+                                   "You will be able to download the report when it is complete.")
         return JsonResponse({
             "status": already_running_status
         })
@@ -2160,8 +2166,9 @@ def problem_grade_report(request, course_id):
                            "To view the status of the report, see Pending Instructor Tasks below.")
         return JsonResponse({"status": success_status})
     except AlreadyRunningError:
-        already_running_status = _("A problem grade report is already being generated. "
-                                   "To view the status of the report, see Pending Instructor Tasks below. You will be able to download the report when it is complete.")
+        already_running_status = _("A problem grade report is already being generated."
+                                   "To view the status of the report, see Pending Instructor Tasks below."
+                                   "You will be able to download the report when it is complete.")
         return JsonResponse({
             "status": already_running_status
         })
