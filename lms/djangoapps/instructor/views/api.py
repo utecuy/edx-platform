@@ -1135,7 +1135,7 @@ def get_students_who_may_enroll(request, course_id):
     try:
         instructor_task.api.submit_calculate_may_enroll_csv(request, course_key, query_features)
         success_status = _(
-            "The enrollment report is being created. This report contains information about learners who can enroll in your course."
+            "The enrollment report is being created. This report contains information about learners who can enroll in the course."
             " To view the status of the report, see Pending Instructor Tasks below."
         )
         return JsonResponse({"status": success_status})
