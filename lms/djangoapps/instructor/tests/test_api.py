@@ -2310,7 +2310,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
         response = self.client.get(url, {})
         res_json = json.loads(response.content)
         self.assertIn('status', res_json)
-        self.assertNotIn('already in progress', res_json['status'])
+        self.assertNotIn('currently being created', res_json['status'])
         # CSV generation already in progress:
         with patch('instructor_task.api.submit_calculate_may_enroll_csv') as submit_task_function:
             error = AlreadyRunningError()
@@ -2318,7 +2318,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
             response = self.client.get(url, {})
             res_json = json.loads(response.content)
             self.assertIn('status', res_json)
-            self.assertIn('already in progress', res_json['status'])
+            self.assertIn('currently being created', res_json['status'])
 
     def test_access_course_finance_admin_with_invalid_course_key(self):
         """
