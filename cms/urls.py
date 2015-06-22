@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 
 # There is a course creators admin table.
-from django.contrib import admin
+from ratelimitbackend import admin
 from edx_admin.admin import RatelimitSudoAdminSite
 
 admin.site = RatelimitSudoAdminSite()
