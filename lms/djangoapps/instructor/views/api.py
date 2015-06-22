@@ -1259,6 +1259,7 @@ def get_enrollment_report(request, course_id):
 @ensure_csrf_cookie
 @cache_control(no_cache=True, no_store=True, must_revalidate=True)
 @require_level('staff')
+@sudo_required
 @require_finance_admin
 def get_exec_summary_report(request, course_id):
     """
