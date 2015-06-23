@@ -2573,7 +2573,7 @@ class TestInstructorAPILevelsDataDump(ModuleStoreTestCase, LoginEnrollmentTestCa
         CourseFinanceAdminRole(self.course.id).add_users(self.instructor)
         with patch(task_api_endpoint):
             response = self.client.get(url, {})
-        success_status = "The {report_type} report is being created." \
+        success_status = "The {report_type} report is being created. This report contains information about learners who can enroll in the course." \
                          " To view the status of the report, see Pending Instructor Tasks below".format(report_type=report_type)
         self.assertIn(success_status, response.content)
 

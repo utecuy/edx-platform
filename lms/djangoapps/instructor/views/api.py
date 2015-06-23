@@ -1256,7 +1256,7 @@ def get_exec_summary_report(request, course_id):
     course_key = SlashSeparatedCourseKey.from_deprecated_string(course_id)
     try:
         instructor_task.api.submit_executive_summary_report(request, course_key)
-        status_response = _("The executive summary report is being created. "
+        status_response = _("The executive summary report is being created."
                             " To view the status of the report, see Pending Instructor Tasks below.")
     except AlreadyRunningError:
         status_response = _(
