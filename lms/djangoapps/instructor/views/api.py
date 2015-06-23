@@ -1107,13 +1107,13 @@ def get_students_features(request, course_id, csv=False):  # pylint: disable=red
     else:
         try:
             instructor_task.api.submit_calculate_students_features_csv(request, course_key, query_features)
-            success_status = _("The enrolled learner profile report is being created." 
+            success_status = _("The enrolled learner profile report is being created."
                                " To view the status of the report, see Pending Instructor Tasks below.")
             return JsonResponse({"status": success_status})
         except AlreadyRunningError:
             already_running_status = _(
             	"This enrollment report is currently being created."
-            	" To view the status of the report, see Pending Instructor Tasks below." 
+            	" To view the status of the report, see Pending Instructor Tasks below."
                 " You will be able to download the report when it is complete.")
             return JsonResponse({"status": already_running_status})
 
@@ -1135,7 +1135,7 @@ def get_students_who_may_enroll(request, course_id):
     try:
         instructor_task.api.submit_calculate_may_enroll_csv(request, course_key, query_features)
         success_status = _(
-            "The enrollment report is being created. This report contains information about learners who can enroll in the course."
+            "The enrollment report is being created."
             " To view the status of the report, see Pending Instructor Tasks below."
         )
         return JsonResponse({"status": success_status})
@@ -1238,7 +1238,7 @@ def get_enrollment_report(request, course_id):
         return JsonResponse({"status": success_status})
     except AlreadyRunningError:
         already_running_status = _("The detailed enrollment report is being created."
-                                   " To view the status of the report, see Pending Instructor Tasks below." 
+                                   " To view the status of the report, see Pending Instructor Tasks below."
                                    " You will be able to download the report when it is complete.")
         return JsonResponse({
             "status": already_running_status
