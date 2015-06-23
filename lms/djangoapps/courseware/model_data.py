@@ -968,6 +968,9 @@ class ScoresClient(object):
         self.user_id = user_id
         self._locations_to_scores = {}
 
+    def __contains__(self, location):
+        return location in self._locations_to_scores
+
     def fetch_scores(self, locations):
         scores_qset = StudentModule.objects.filter(
             student_id=self.user_id,
@@ -978,7 +981,7 @@ class ScoresClient(object):
         # attached to them (since old mongo identifiers don't include runs).
         # So we have to add that info back in before we put it into our lookup.
         self._locations_to_scores.update({
-            location.map_into_course(course_key): ScoresClient.Score(correct, total)
+            UsageKey.from_string(location).map_into_course(self.course_key): self.Score(correct, total)
             for location, correct, total
             in scores_qset.values_list('module_state_key', 'grade', 'max_grade')
         })
@@ -989,6 +992,7 @@ class ScoresClient(object):
     @classmethod
     def from_field_data_cache(cls, fd_cache):
         client = cls(fd_cache.course_id, fd_cache.user.id)
-        client.fetch_from_remote(
-            descriptor.id for descriptor in fd_cache.descriptors if descriptor.has_score
+        client.fetch_scores(
+            descriptor.location for descriptor in fd_cache.descriptors if descriptor.has_score
         )
+        return client

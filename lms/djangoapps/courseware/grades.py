@@ -145,14 +145,6 @@ def field_data_cache_for_grading(course, user):
         course.id, user, course, depth=None, descriptor_filter=descriptor_affects_grading
     )
 
-def scores_client_for_grading(course, user, fd_cache):
-    client = ScoresClient(course.id, user.id)
-    client.fetch_from_remote(
-        descriptor.id for descriptor in fd_cache.descriptors if descriptor.has_score
-    )
-    return client
-
-
 def answer_distributions(course_key):
     """
     Given a course_key, return answer distributions in the form of a dictionary
@@ -292,7 +284,7 @@ def _grade(student, request, course, keep_raw_scores, field_data_cache, scores_c
         with manual_transaction():
             field_data_cache = field_data_cache_for_grading(course, student)
     if scores_client is None:
-        scores_client = scores_client_for_grading(course, student, field_data_cache)
+        scores_client = ScoresClient.from_field_data_cache(field_data_cache)
 
     # Dict of item_ids -> (earned, possible) point tuples. This *only* grabs
     # scores that were registered with the submissions API, which for the moment
@@ -333,7 +325,7 @@ def _grade(student, request, course, keep_raw_scores, field_data_cache, scores_c
 
             if not should_grade_section:
                 should_grade_section = any(
-                    descriptor.location in field_data_cache.locations_to_scores
+                    descriptor.location in scores_client
                     for descriptor in section['xmoduledescriptors']
                 )
 
@@ -359,6 +351,7 @@ def _grade(student, request, course, keep_raw_scores, field_data_cache, scores_c
                         field_data_cache,
                         submissions_scores,
                         max_scores_cache,
+                        scores_client,
                     )
                     if correct is None and total is None:
                         continue
@@ -482,7 +475,7 @@ def _progress_summary(student, request, course, field_data_cache=None, scores_cl
         if field_data_cache is None:
             field_data_cache = field_data_cache_for_grading(course, student)
         if scores_client is None:
-            scores_client = scores_client_for_grading(course, student, field_data_cache)
+            scores_client = ScoresClient.from_field_data_cache(field_data_cache)
 
         course_module = get_module_for_descriptor(
             student, request, course, field_data_cache, course.id, course=course
@@ -529,6 +522,7 @@ def _progress_summary(student, request, course, field_data_cache=None, scores_cl
                         field_data_cache,
                         submissions_scores,
                         max_scores_cache,
+                        scores_client,
                     )
                     if correct is None and total is None:
                         continue
@@ -570,7 +564,14 @@ def _progress_summary(student, request, course, field_data_cache=None, scores_cl
     return chapters
 
 
-def get_score(user, problem_descriptor, module_creator, field_data_cache, submissions_scores_cache, max_scores_cache):
+def weighted_score(raw_correct, raw_total, weight):
+    # If there is no weighting, or weighting can't be applied, return input.
+    if weight is None or raw_total == 0:
+        return (raw_correct, raw_total)
+    return (float(raw_correct) * weight / raw_total, float(weight))
+
+
+def get_score(user, problem_descriptor, module_creator, field_data_cache, submissions_scores_cache, max_scores_cache, scores_client):
     """
     Return the score for a user on a problem, as a tuple (correct, total).
     e.g. (5,7) if you got 5 out of 7 points.
@@ -612,28 +613,27 @@ def get_score(user, problem_descriptor, module_creator, field_data_cache, submis
         # These are not problems, and do not have a score
         return (None, None)
 
-    student_module = None
-    if field_data_cache:
-        student_module = field_data_cache.locations_to_scores.get(problem_descriptor.location)
-
-    max_score = max_scores_cache.get(problem_descriptor.location)
-
-    # If the student_module exists and has a max_grade associated with it, we
-    # trust that value. This is important for cases where a student might have
-    # seen an older version of the problem -- they're still graded on what was
-    # possible when they tried the problem, not what it's worth now.
-    if student_module is not None and student_module.max_grade is not None:
-        correct = student_module.grade if student_module.grade is not None else 0
-        total = student_module.max_grade
-
-    elif max_score is not None and settings.FEATURES.get("ENABLE_MAX_SCORE_CACHE"):
+    # Check the score that comes from the ScoresClient (out of CSM).
+    # If an entry exists and has a total associated with it, we trust that
+    # value. This is important for cases where a student might have seen an
+    # older version of the problem -- they're still graded on what was possible
+    # when they tried the problem, not what it's worth now.
+    score = scores_client.get(problem_descriptor.location)
+    cached_max_score = max_scores_cache.get(problem_descriptor.location)
+    if score and score.total is not None:
+        # We have a valid score, just use it.
+        correct = score.correct if score.correct is not None else 0.0
+        total = score.total
+    elif cached_max_score is not None and settings.FEATURES.get("ENABLE_MAX_SCORE_CACHE"):
+        # We don't have a valid score entry but we know from our cache what the
+        # max possible score is, so they've earned 0.0 / cached_max_score
         correct = 0.0
-        total = max_score
-
+        total = cached_max_score
     else:
-        # If the problem was not in the cache, or hasn't been graded yet,
-        # we need to instantiate the problem.
-        # Otherwise, the max score (cached in student_module) won't be available
+        # This means we don't have a valid score entry and we don't have a
+        # cached_max_score on hand. We know they've earned 0.0 points on this,
+        # but we need to instantiate the module (i.e. load student state) in
+        # order to find out how much it was worth.
         problem = module_creator(problem_descriptor)
         if problem is None:
             return (None, None)
@@ -645,21 +645,11 @@ def get_score(user, problem_descriptor, module_creator, field_data_cache, submis
         # In which case total might be None
         if total is None:
             return (None, None)
-
         else:
             # add location to the max score cache
             max_scores_cache.set(problem_descriptor.location, total)
 
-    # Now we re-weight the problem, if specified
-    weight = problem_descriptor.weight
-    if weight is not None:
-        if total == 0:
-            log.exception("Cannot reweight a problem with zero total points. Problem: " + str(student_module))
-            return (correct, total)
-        correct = correct * weight / total
-        total = weight
-
-    return (correct, total)
+    return weighted_score(correct, total, problem_descriptor.weight)
 
 
 @contextmanager
