@@ -741,7 +741,7 @@ class FieldDataCache(object):
                 self.course_id,
             ),
         }
-        self.descriptors = []
+        self.scorable_locations = set()
         self.add_descriptors_to_cache(descriptors)
 
     def add_descriptors_to_cache(self, descriptors):
@@ -749,7 +749,7 @@ class FieldDataCache(object):
         Add all `descriptors` to this FieldDataCache.
         """
         if self.user.is_authenticated():
-            self.descriptors.extend(descriptors)
+            self.scorable_locations.update(desc.location for desc in descriptors if desc.has_score)
             for scope, fields in self._fields_to_cache(descriptors).items():
                 if scope not in self.cache:
                     continue
@@ -960,18 +960,27 @@ class FieldDataCache(object):
 
 
 class ScoresClient(object):
+    """
+    Basic client interface for retrieving Score information.
 
+    Eventually, this should read and write scores, but at the moment it only
+    handles the read side of things.
+    """
     Score = namedtuple('Score', 'correct total')
 
     def __init__(self, course_key, user_id):
+        """Basic constructor. from_field_data_cache() is more appopriate for most uses."""
         self.course_key = course_key
         self.user_id = user_id
         self._locations_to_scores = {}
+        self._has_fetched = False
 
     def __contains__(self, location):
+        """Return True if we have a score for this location."""
         return location in self._locations_to_scores
 
     def fetch_scores(self, locations):
+        """Grab score information."""
         scores_qset = StudentModule.objects.filter(
             student_id=self.user_id,
             course_id=self.course_key,
@@ -985,14 +994,26 @@ class ScoresClient(object):
             for location, correct, total
             in scores_qset.values_list('module_state_key', 'grade', 'max_grade')
         })
+        self._has_fetched = True
 
     def get(self, location):
+        """
+        Get the score for a given location, if it exists.
+
+        If we don't have a score for that location, return `None`. Note that as
+        convention, you should be passing in a location with full course run
+        information.
+        """
+        if not self._has_fetched:
+            raise ValueError(
+                "Tried to fetch location {} from ScoresClient before fetch_scores() has run."
+                .format(location)
+            )
         return self._locations_to_scores.get(location)
 
     @classmethod
     def from_field_data_cache(cls, fd_cache):
+        """Create a ScoresClient from a populated FieldDataCache."""
         client = cls(fd_cache.course_id, fd_cache.user.id)
-        client.fetch_scores(
-            descriptor.location for descriptor in fd_cache.descriptors if descriptor.has_score
-        )
+        client.fetch_scores(fd_cache.scorable_locations)
         return client

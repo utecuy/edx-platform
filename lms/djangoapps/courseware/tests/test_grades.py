@@ -2,7 +2,6 @@
 Test grade calculation.
 """
 from django.http import Http404
-from django.test.utils import override_settings
 from django.test.client import RequestFactory
 
 from mock import patch

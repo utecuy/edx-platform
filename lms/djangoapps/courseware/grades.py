@@ -145,6 +145,7 @@ def field_data_cache_for_grading(course, user):
         course.id, user, course, depth=None, descriptor_filter=descriptor_affects_grading
     )
 
+
 def answer_distributions(course_key):
     """
     Given a course_key, return answer distributions in the form of a dictionary
@@ -291,9 +292,11 @@ def _grade(student, request, course, keep_raw_scores, field_data_cache, scores_c
     # means only openassessment (edx-ora2)
     submissions_scores = sub_api.get_scores(course.id.to_deprecated_string(), anonymous_id_for_user(student, course.id))
     max_scores_cache = MaxScoresCache.create_for_course(course)
-    max_scores_cache.fetch_from_remote(
-        [descriptor.location for descriptor in field_data_cache.descriptors]
-    )
+    # For the moment, we have to get scorable_locations from field_data_cache
+    # and not from scores_client, because scores_client is ignorant of things
+    # in the submissions API. As a further refactoring step, submissions should
+    # be hidden behind the ScoresClient.
+    max_scores_cache.fetch_from_remote(field_data_cache.scorable_locations)
 
     grading_context = course.grading_context
     raw_scores = []
@@ -348,10 +351,9 @@ def _grade(student, request, course, keep_raw_scores, field_data_cache, scores_c
                         student,
                         module_descriptor,
                         create_module,
-                        field_data_cache,
+                        scores_client,
                         submissions_scores,
                         max_scores_cache,
-                        scores_client,
                     )
                     if correct is None and total is None:
                         continue
@@ -487,9 +489,11 @@ def _progress_summary(student, request, course, field_data_cache=None, scores_cl
 
     submissions_scores = sub_api.get_scores(course.id.to_deprecated_string(), anonymous_id_for_user(student, course.id))
     max_scores_cache = MaxScoresCache.create_for_course(course)
-    max_scores_cache.fetch_from_remote(
-        [descriptor.location for descriptor in field_data_cache.descriptors]
-    )
+    # For the moment, we have to get scorable_locations from field_data_cache
+    # and not from scores_client, because scores_client is ignorant of things
+    # in the submissions API. As a further refactoring step, submissions should
+    # be hidden behind the ScoresClient.
+    max_scores_cache.fetch_from_remote(field_data_cache.scorable_locations)
 
     chapters = []
     # Don't include chapters that aren't displayable (e.g. due to error)
@@ -519,10 +523,9 @@ def _progress_summary(student, request, course, field_data_cache=None, scores_cl
                         student,
                         module_descriptor,
                         module_creator,
-                        field_data_cache,
+                        scores_client,
                         submissions_scores,
                         max_scores_cache,
-                        scores_client,
                     )
                     if correct is None and total is None:
                         continue
@@ -565,13 +568,14 @@ def _progress_summary(student, request, course, field_data_cache=None, scores_cl
 
 
 def weighted_score(raw_correct, raw_total, weight):
+    """Return a tuple that represents the weighted (correct, total) score."""
     # If there is no weighting, or weighting can't be applied, return input.
     if weight is None or raw_total == 0:
         return (raw_correct, raw_total)
     return (float(raw_correct) * weight / raw_total, float(weight))
 
 
-def get_score(user, problem_descriptor, module_creator, field_data_cache, submissions_scores_cache, max_scores_cache, scores_client):
+def get_score(user, problem_descriptor, module_creator, scores_client, submissions_scores_cache, max_scores_cache):
     """
     Return the score for a user on a problem, as a tuple (correct, total).
     e.g. (5,7) if you got 5 out of 7 points.
@@ -581,7 +585,7 @@ def get_score(user, problem_descriptor, module_creator, field_data_cache, submis
 
     user: a Student object
     problem_descriptor: an XModuleDescriptor
-    field_data_cache: a FieldDataCache
+    scores_client: an initialized ScoresClient
     module_creator: a function that takes a descriptor, and returns the corresponding XModule for this user.
            Can return None if user doesn't have access, or if something else went wrong.
     submissions_scores_cache: A dict of location names to (earned, possible) point tuples.
