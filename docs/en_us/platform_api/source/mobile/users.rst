@@ -2,8 +2,7 @@
 Mobile User API
 ####################################
 
-This page describes how to use the Mobile User API to complete
-these actions:
+With the Mobile User API, you can complete the following actions.
 
 * `Get User Details`_
 * `Get a User's Course Enrollments`_
