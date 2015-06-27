@@ -186,7 +186,6 @@ function (VideoPlayer, i18n, moment) {
                 if (!_youtubeApiDeferred) {
                     _youtubeApiDeferred = $.Deferred();
                     setupOnYouTubeIframeAPIReady();
-                    _loadYoutubeApi(state);
                 } else if (!window.onYouTubeIframeAPIReady || !window.onYouTubeIframeAPIReady.done) {
                     // The Deferred object could have been already defined in a previous
                     // initialization of the video module. However, since then the global variable
@@ -207,23 +206,6 @@ function (VideoPlayer, i18n, moment) {
             state.modules.push(video);
             state.__dfd__.resolve();
         }
-    }
-
-    function _loadYoutubeApi(state) {
-        console.log('[Video info]: YouTube API is not loaded. Will try to load...');
-
-        window.setTimeout(function () {
-            // If YouTube API will load OK, it will run `onYouTubeIframeAPIReady`
-            // callback, which will set `state.youtubeApiAvailable` to `true`.
-            // If something goes wrong at this stage, `state.youtubeApiAvailable` is
-            // `false`.
-            if (!state.youtubeIsAvailable) {
-                console.log('[Video info]: YouTube API is not available.');
-            }
-            state.el.trigger('youtube_availability', [state.youtubeIsAvailable]);
-        }, state.config.ytTestTimeout);
-
-        $.getScript(document.location.protocol + '//' + state.config.ytApiUrl);
     }
 
     // function _configureCaptions(state)
@@ -466,7 +448,6 @@ function (VideoPlayer, i18n, moment) {
 
     // function initialize(element)
     // The function set initial configuration and preparation.
-
     function initialize(element) {
         var self = this,
             el = this.el,
@@ -494,7 +475,7 @@ function (VideoPlayer, i18n, moment) {
         // jQuery .data() return object with keys in lower camelCase format.
         this.config = $.extend({}, _getConfiguration(this.metadata, this.storage), {
             element: element,
-            fadeOutTimeout:     1400,
+            fadeOutTimeout: 1400,
             captionsFreezeTime: 10000,
             mode: $.cookie('edX_video_player_mode'),
             // Available HD qualities will only be accessible once the video has
@@ -511,6 +492,8 @@ function (VideoPlayer, i18n, moment) {
             this.config.speed || this.config.generalSpeed
         );
 
+        _setConfigurations(this);
+
         if (!(_parseYouTubeIDs(this))) {
 
             // If we do not have YouTube ID's, try parsing HTML5 video sources.
@@ -522,68 +505,78 @@ function (VideoPlayer, i18n, moment) {
             }
 
             console.log('[Video info]: Start player in HTML5 mode.');
-
-            _setConfigurations(this);
             _renderElements(this);
         } else {
-            if (!this.youtubeXhr) {
-                this.youtubeXhr = this.getVideoMetadata();
-            }
+            _renderElements(this);
 
-            this.youtubeXhr
-                .always(function (json, status) {
-                    // It will work for both if statusCode is 200 or 410.
-                    var didSucceed = (json.error && json.error.code === 410) || status === 'success' || status === 'notmodified';
-                    if (!didSucceed) {
-                        console.log(
-                            '[Video info]: YouTube returned an error for ' +
-                            'video with id "' + id + '".'
-                        );
+            console.log('[Video info]: YouTube API is not loaded. Will try to load...');
+            window.setTimeout(function () {
+                // If YouTube API will load OK, it will run `onYouTubeIframeAPIReady`
+                // callback, which will set `state.youtubeApiAvailable` to `true`.
+                // If something goes wrong at this stage, `state.youtubeApiAvailable` is
+                // `false`.
+                if (!self.youtubeIsAvailable) {
+                    console.log('[Video info]: YouTube API is not available.');
+                }
+                self.el.trigger('youtube_availability', [self.youtubeIsAvailable]);
+            }, self.config.ytTestTimeout);
 
-                        // When the youtube link doesn't work for any reason
-                        // (for example, the great firewall in china) any
-                        // alternate sources should automatically play.
-                        if (!_prepareHTML5Video(self)) {
-                            console.log(
-                                '[Video info]: Continue loading ' +
-                                'YouTube video.'
-                            );
+            var scriptTag = document.createElement('script');
+            scriptTag.src = document.location.protocol + '//' + this.config.ytApiUrl;
 
-                            // Non-YouTube sources were not found either.
+            $(scriptTag).on('load', function () {
+                console.log(
+                    '[Video info]: Start player in YouTube mode.'
+                );
 
-                            el.find('.video-player div')
-                                .removeClass('hidden');
-                            el.find('.video-player h3')
-                                .addClass('hidden');
+                self.fetchMetadata();
+                self.parseSpeed();
+            });
 
-                            // If in reality the timeout was to short, try to
-                            // continue loading the YouTube video anyways.
-                            self.fetchMetadata();
-                            self.parseSpeed();
-                        } else {
-                            console.log(
-                                '[Video info]: Change player mode to HTML5.'
-                            );
+            $(scriptTag).on('error', function () {
+                console.log(
+                    '[Video info]: YouTube returned an error for ' +
+                    'video with id "' + id + '".'
+                );
 
-                            // In-browser HTML5 player does not support quality
-                            // control.
-                            el.find('a.quality_control').hide();
-                        }
-                    } else {
-                        console.log(
-                            '[Video info]: Start player in YouTube mode.'
-                        );
+                // When the youtube link doesn't work for any reason
+                // (for example, the great firewall in china) any
+                // alternate sources should automatically play.
+                if (!_prepareHTML5Video(self)) {
+                    console.log(
+                        '[Video info]: Continue loading ' +
+                        'YouTube video.'
+                    );
 
-                        self.fetchMetadata();
-                        self.parseSpeed();
-                    }
+                    // Non-YouTube sources were not found either.
 
-                    _setConfigurations(self);
-                    _renderElements(self);
-                });
+                    el.find('.video-player div')
+                        .removeClass('hidden');
+                    el.find('.video-player h3')
+                        .addClass('hidden');
+
+                    // If in reality the timeout was to short, try to
+                    // continue loading the YouTube video anyways.
+                    self.fetchMetadata();
+                    self.parseSpeed();
+                } else {
+                    console.log(
+                        '[Video info]: Change player mode to HTML5.'
+                    );
+
+                    // In-browser HTML5 player does not support quality
+                    // control.
+                    el.find('a.quality_control').hide();
+                }
+                _renderElements(self)
+            });
+
+
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
+
+            return __dfd__.promise();
         }
-
-        return __dfd__.promise();
     }
 
     // function parseYoutubeStreams(state, youtubeStreams)
