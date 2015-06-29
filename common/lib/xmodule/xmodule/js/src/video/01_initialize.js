@@ -10,14 +10,14 @@
  * @module Initialize
  */
 // TODO this is temporary hack to run the jasmine tests
-(function(requirejs, define) {
-    requirejs.config({
-        paths: {
-            'moment': 'xmodule/include/common_static/js/vendor/moment.min'
-        }
-    });
-
-}).call(this, RequireJS.requirejs, define);
+//(function(requirejs, define) {
+//    requirejs.config({
+//        paths: {
+//            'moment': 'xmodule/include/common_static/js/vendor/moment.min'
+//        }
+//    });
+//
+//}).call(this, RequireJS.requirejs, define);
 
 
 (function (requirejs, require, define) {
@@ -85,7 +85,9 @@ function (VideoPlayer, i18n, moment) {
         setSpeed: setSpeed,
         speedToString: speedToString,
         trigger: trigger,
-        youtubeId: youtubeId
+        youtubeId: youtubeId,
+        loadHtmlPlayer: loadHtmlPlayer,
+        loadYoutubePlayer: loadYoutubePlayer
     },
 
         _youtubeApiDeferred = null,
@@ -446,8 +448,57 @@ function (VideoPlayer, i18n, moment) {
         });
     }
 
+    function loadYoutubePlayer() {
+        console.log(
+            '[Video info]: Start player in YouTube mode.'
+        );
+
+        this.fetchMetadata();
+        this.parseSpeed();
+    }
+
+    function loadHtmlPlayer() {
+        console.log(
+            '[Video info]: YouTube returned an error for ' +
+            'video with id "' + this.id + '".'
+        );
+
+        // When the youtube link doesn't work for any reason
+        // (for example, the great firewall in china) any
+        // alternate sources should automatically play.
+        if (!_prepareHTML5Video(this)) {
+            console.log(
+                '[Video info]: Continue loading ' +
+                'YouTube video.'
+            );
+
+            // Non-YouTube sources were not found either.
+
+            this.el.find('.video-player div')
+                .removeClass('hidden');
+            this.el.find('.video-player h3')
+                .addClass('hidden');
+
+            // If in reality the timeout was to short, try to
+            // continue loading the YouTube video anyways.
+            this.fetchMetadata();
+            this.parseSpeed();
+        } else {
+            console.log(
+                '[Video info]: Change player mode to HTML5.'
+            );
+
+            // In-browser HTML5 player does not support quality
+            // control.
+            this.el.find('a.quality_control').hide();
+        }
+        _renderElements(this);
+    }
+
+
     // function initialize(element)
     // The function set initial configuration and preparation.
+
     function initialize(element) {
         var self = this,
             el = this.el,
@@ -524,59 +575,22 @@ function (VideoPlayer, i18n, moment) {
             var scriptTag = document.createElement('script');
             scriptTag.src = document.location.protocol + '//' + this.config.ytApiUrl;
 
-            $(scriptTag).on('load', function () {
-                console.log(
-                    '[Video info]: Start player in YouTube mode.'
-                );
-
-                self.fetchMetadata();
-                self.parseSpeed();
+            $(scriptTag).on('load', function() {
+                self.loadYoutubePlayer();
+            });
+            $(scriptTag).on('error', function() {
+                self.loadHtmlPlayer();
             });
 
-            $(scriptTag).on('error', function () {
-                console.log(
-                    '[Video info]: YouTube returned an error for ' +
-                    'video with id "' + id + '".'
-                );
-
-                // When the youtube link doesn't work for any reason
-                // (for example, the great firewall in china) any
-                // alternate sources should automatically play.
-                if (!_prepareHTML5Video(self)) {
-                    console.log(
-                        '[Video info]: Continue loading ' +
-                        'YouTube video.'
-                    );
-
-                    // Non-YouTube sources were not found either.
-
-                    el.find('.video-player div')
-                        .removeClass('hidden');
-                    el.find('.video-player h3')
-                        .addClass('hidden');
-
-                    // If in reality the timeout was to short, try to
-                    // continue loading the YouTube video anyways.
-                    self.fetchMetadata();
-                    self.parseSpeed();
-                } else {
-                    console.log(
-                        '[Video info]: Change player mode to HTML5.'
-                    );
-
-                    // In-browser HTML5 player does not support quality
-                    // control.
-                    el.find('a.quality_control').hide();
+            if(!window.injectScriptTagToDOM) {
+                window.injectScriptTagToDOM = function (scriptTag) {
+                    var firstScriptTag = document.getElementsByTagName('script')[0];
+                    firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
                 }
-                _renderElements(self)
-            });
-
-
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
-
-            return __dfd__.promise();
+            }
+            window.injectScriptTagToDOM(scriptTag);
         }
+        return __dfd__.promise();
     }
 
     // function parseYoutubeStreams(state, youtubeStreams)

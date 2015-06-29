@@ -65,7 +65,6 @@ lib_paths:
 spec_paths:
     - spec/helper.js
     - spec
-    - spec/main_requirejs.js
 
 # Paths to fixture files (optional)
 fixture_paths:
