@@ -4,6 +4,7 @@ Serializer for user API
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
+from courseware.access import has_access
 from courseware.courses import course_image_url
 from student.models import CourseEnrollment, User
 from certificates.models import certificate_status_for_student, CertificateStatuses
@@ -54,6 +55,7 @@ class CourseOverviewField(serializers.RelatedField):
             "course_updates": course_updates_url,
             "course_handouts": course_handouts_url,
             "subscription_id": course_overview.clean_id(padding_char='_'),
+            "courseware_access": has_access(request.user, 'load_mobile', course_overview).to_json(),
         }
 
 
