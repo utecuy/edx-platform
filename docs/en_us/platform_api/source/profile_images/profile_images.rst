@@ -4,11 +4,10 @@
 Profile Images API
 ##################################################
 
-This page contains information on using the Profile Images API to complete
-the following actions.
+You can use the Profile Images API to complete the following actions.
 
-* `Upload a Profile Image`_
-* `Remove Profile Images`_
+* - :ref:`Upload a profile image <Upload a Profile Image>`.
+* - :ref:`Remove profile images <Remove Profile Images>`.
 
 .. _Upload a Profile Image:
 

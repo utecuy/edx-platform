@@ -48,19 +48,19 @@ class UserDetail(generics.RetrieveAPIView):
 
     **Response Values**
 
-        If the request is successful, an HTTP 200 "OK" response is returned.
+        If the request is successful, the request returns an HTTP 200 "OK" response.
 
         The HTTP 200 response has the following values.
 
         * id: The ID of the user.
 
-        * username: The username of the currently logged in user.
+        * username: The username of the currently signed in user.
 
-        * email: The email address of the currently logged in user.
+        * email: The email address of the currently signed in user.
 
-        * name: The full name of the currently logged in user.
+        * name: The full name of the currently signed in user.
 
-        * course_enrollments: The URI to list the courses the currently logged
+        * course_enrollments: The URI to list the courses the currently signed
           in user is enrolled in.
     """
     queryset = (
@@ -93,7 +93,7 @@ class UserCourseStatus(views.APIView):
 
     **Response Values**
 
-        If the request is successful, an HTTP 200 "OK" response is returned.
+        If the request is successful, the request returns an HTTP 200 "OK" response.
 
         The HTTP 200 response has the following values.
 
@@ -216,8 +216,8 @@ class UserCourseEnrollmentsList(generics.ListAPIView):
 
     **Response Values**
 
-        If the request for information about the user is successful, an HTTP 200 "OK" response
-        is returned.
+        If the request for information about the user is successful, the request returns 
+        an HTTP 200 "OK" response.
 
         The HTTP 200 response has the following values.
 
