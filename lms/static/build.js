@@ -18,7 +18,8 @@
          * done.
          */
         modules: getModulesList([
-            'teams/js/teams_tab_factory'
+            'teams/js/teams_tab_factory',
+            'js/groups/views/cohorts_dashboard_factory'
         ]),
 
         /**
