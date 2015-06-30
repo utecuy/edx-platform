@@ -270,7 +270,6 @@ def get_thread_list(
     course = _get_course_or_404(course_key, request.user)
     context = get_context(course, request)
     query_params = {
-        "user_id": request.user.id,
         "group_id": (
             None if context["is_requester_privileged"] else
             get_cohort_id(request.user, course.id)
@@ -282,10 +281,13 @@ def get_thread_list(
         "text": text_search,
     }
 
-    query_params["unanswered"] = True if "unanswered" in view else False
-    query_params["unread"] = True if "unread" in view else False
-
     text_search_rewrite = None
+
+    if view and "unanswered" in view:
+        query_params["unanswered"] = True
+    if view and "unread" in view:
+        query_params["unread"] = True
+
     if following:
         threads, result_page, num_pages = context["cc_requester"].subscribed_threads(query_params)
     else:

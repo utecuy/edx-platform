@@ -217,6 +217,8 @@ class ThreadViewSet(_ViewMixin, DeveloperErrorViewMixin, ViewSet):
 
         * read: Boolean indicating whether the user has read this thread
 
+        * has_endorsed: Boolean indicating whether this thread has been answered
+
     **DELETE response values:
 
         No content is returned for a DELETE request
