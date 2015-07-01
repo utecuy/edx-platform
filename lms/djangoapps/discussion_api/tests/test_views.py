@@ -5,6 +5,7 @@ from datetime import datetime
 import json
 from urlparse import urlparse
 
+import ddt
 import httpretty
 import mock
 from pytz import UTC
@@ -133,7 +134,7 @@ class CourseTopicsViewTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
             }
         )
 
-
+@ddt.ddt
 @httpretty.activate
 class ThreadViewSetListTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
     """Tests for ThreadViewSet list"""
@@ -233,6 +234,32 @@ class ThreadViewSetListTest(DiscussionAPIViewTestMixin, ModuleStoreTestCase):
             "per_page": ["10"],
             "recursive": ["False"],
         })
+
+    @ddt.data(
+        ("read", True, "unread", "False"),
+        ("read", False, "unread", "True"),
+        ("endorsed", True, "unanswered", "False"),
+        ("endorsed", False, "unanswered", "True")
+    )
+    @ddt.unpack
+    def test_view_query(self, source_field, source_value, query, expected_query_value):
+        threads = [make_minimal_cs_thread(overrides={source_field: source_value})]
+        self.register_get_user_response(self.user)
+        self.register_get_threads_response(threads, page=1, num_pages=1)
+        self.client.get(
+            self.url,
+            {"course_id": unicode(self.course.id), "view": query}
+        )
+        self.assert_last_query_params({
+            "course_id": [unicode(self.course.id)],
+            "sort_key": ["date"],
+            "sort_order": ["desc"],
+            "recursive": ["False"],
+            "page": ["1"],
+            "per_page": ["10"],
+            query: [expected_query_value],
+        })
+
 
     def test_pagination(self):
         self.register_get_user_response(self.user)
@@ -451,8 +478,6 @@ class ThreadViewSetPartialUpdateTest(DiscussionAPIViewTestMixin, ModuleStoreTest
         )
         self.assertEqual(response.status_code, 200)
         response_data = json.loads(response.content)
-        print response_data
-        print expected_response_data
         self.assertEqual(response_data, expected_response_data)
         self.assertEqual(
             httpretty.last_request().parsed_body,
