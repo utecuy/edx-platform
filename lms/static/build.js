@@ -18,6 +18,7 @@
          * done.
          */
         modules: getModulesList([
+            'js/student_account/views/finish_auth_factory',
             'teams/js/teams_tab_factory'
         ]),
 
@@ -47,8 +48,8 @@
             'gettext': 'empty:',
             'coffee/src/ajax_prefix': 'empty:',
             'jquery': 'empty:',
-            'jquery.cookie': 'empty',
-            'jquery.url': 'empty',
+            'jquery.cookie': 'empty:',
+            'jquery.url': 'empty:',
             'backbone': 'empty:',
             'underscore': 'empty:',
             'logger': 'empty:',
