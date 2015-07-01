@@ -10,14 +10,14 @@
  * @module Initialize
  */
 // TODO this is temporary hack to run the jasmine tests
-//(function(requirejs, define) {
-//    requirejs.config({
-//        paths: {
-//            'moment': 'xmodule/include/common_static/js/vendor/moment.min'
-//        }
-//    });
-//
-//}).call(this, RequireJS.requirejs, define);
+(function(requirejs, define) {
+    requirejs.config({
+        paths: {
+            'moment': 'xmodule/include/common_static/js/vendor/moment.min'
+        }
+    });
+
+}).call(this, RequireJS.requirejs, define);
 
 
 (function (requirejs, require, define) {
@@ -591,7 +591,7 @@ function (VideoPlayer, i18n, moment) {
                 self.loadHtmlPlayer();
             });
 
-            this.loadYouTubeIFrameAPI(scriptTag);
+            window.Video.loadYouTubeIFrameAPI(scriptTag);
         }
         return __dfd__.promise();
     }
@@ -695,7 +695,7 @@ function (VideoPlayer, i18n, moment) {
 
         return $.ajax({
             url: ['https://', this.config.ytTestUrl, '?id=', url,
-                '&part=contentDetails&key=', this.config.ytKey ,'&referrer=*.edx.org/*'].join(''),
+                '&part=contentDetails&key=', this.config.ytKey].join(''),
             timeout: this.config.ytTestTimeout,
             success: _.isFunction(callback) ? callback : null
         });
