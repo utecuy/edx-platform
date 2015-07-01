@@ -5,7 +5,7 @@ Enrollment API Overview
 ################################################
 
 Use the Enrollment API to view user and course enrollment
-information, and to enroll a user in a course.
+information and to enroll a user in a course.
 
 You can use the Enrollment API for web, desktop, and mobile
 applications.
@@ -14,7 +14,7 @@ applications.
 Enrollment API Version and Status
 ****************************************
 
-The Enrollment API is currently at version 1.0. We plan on making
+The Enrollment API is currently at version 1.0. We plan to make
 significant enhancements to this API.
 
 ********************************************
@@ -23,14 +23,15 @@ Enrollment API Endpoints
 
 The Enrollment API supports the following tasks, methods, and endpoints.
 
-. list-table::
+.. list-table::
    :widths: 20 10 70
    :header-rows: 1
 
    * - Task
      - Method
      - Endpoint
-   * - :ref:`Get the user's enrollment status in a course <Get the Users Enrollment Status in a Course>`
+   * - :ref:`Get the user's enrollment status in a course <Get the Users
+     Enrollment Status in a Course>`
      - GET
      - /api/enrollment/v1/enrollment/{user_id},{course_id}
    * - :ref:`Get enrollment details for a course<Get Enrollment Details for a Course>`

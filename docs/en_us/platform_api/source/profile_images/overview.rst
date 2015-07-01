@@ -30,6 +30,6 @@ The Profile Images API supports the following tasks, methods, and endpoints.
    * - :ref:`Upload a profile image <Upload a Profile Image>`
      - POST 
      - /api/profile_images/v1/{username}/upload
-   * - :ref:`Remove profile images <Remove Profile Images>`
+   * - :ref:`Remove a profile image <Remove a Profile Image>`
      - POST 
      - /api/profile_images/v1/{username}/remove

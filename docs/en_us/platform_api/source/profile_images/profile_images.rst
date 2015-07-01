@@ -25,7 +25,7 @@ Upload a Profile Image
     No Content
 
 
-.. _Remove Profile Images:
+.. _Remove a Profile Image:
 
 **************************************************
 Remove Profile Images

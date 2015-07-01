@@ -36,7 +36,7 @@ class UserDetail(generics.RetrieveAPIView):
         Get information about the specified user and
         access other resources the user has permissions for.
 
-        Users are redirected to this endpoint after logging in.
+        Users are redirected to this endpoint after they sign in.
 
         You can use the **course_enrollments** value in
         the response to get a list of courses the user is enrolled in.
@@ -52,16 +52,12 @@ class UserDetail(generics.RetrieveAPIView):
 
         The HTTP 200 response has the following values.
 
-        * id: The ID of the user.
-
-        * username: The username of the currently signed in user.
-
-        * email: The email address of the currently signed in user.
-
-        * name: The full name of the currently signed in user.
-
         * course_enrollments: The URI to list the courses the currently signed
           in user is enrolled in.
+        * email: The email address of the currently signed in user.
+        * id: The ID of the user.
+        * name: The full name of the currently signed in user.
+        * username: The username of the currently signed in user.
     """
     queryset = (
         User.objects.all()
@@ -74,11 +70,11 @@ class UserDetail(generics.RetrieveAPIView):
 @mobile_view(is_user=True)
 class UserCourseStatus(views.APIView):
     """
-    **Use Case**
+    **Use Cases**
 
         Get or update the ID of the module that the specified user last visited in the specified course.
 
-    **Example Request**
+    **Example Requests**
 
         GET /api/mobile/v0.5/users/{username}/course_status_info/{course_id}
 
@@ -98,7 +94,6 @@ class UserCourseStatus(views.APIView):
         The HTTP 200 response has the following values.
 
         * last_visited_module_id: The ID of the last module that the user visited in the course.
-
         * last_visited_module_path: The ID of the modules in the path from the
           last visited module to the course module.
     """
@@ -216,32 +211,36 @@ class UserCourseEnrollmentsList(generics.ListAPIView):
 
     **Response Values**
 
-        If the request for information about the user is successful, the request returns 
-        an HTTP 200 "OK" response.
+        If the request for information about the user is successful, the
+        request returns an HTTP 200 "OK" response.
 
         The HTTP 200 response has the following values.
 
-        * created: The date the course was created.
-        * mode: The type of certificate registration for this course (honor or
-          certified).
-        * is_active: Whether the course is currently active; true or false.
-        * certificate: Information about the user's earned certificate in the course.
-        * url: URL to the downloadable version of the certificate, if exists.
+        * certificate: Information about the user's earned certificate in the
+          course.
         * course: A collection of the following data about the course.
 
+          * course_handouts: The URI to get data for course handouts.
+          * course_image: The path to the course image.
           * course_updates: The URI to get data for course updates.
+          * end: The end date of the course.
+          * id: The unique ID of the course.
+          * latest_updates: Reserved for future use.
+          * name: The name of the course.
           * number: The course number.
           * org: The organization that created the course.
-          * video_outline: The URI to get the list of all videos that the user can
-            access in the course.
-          * id: The unique ID of the course.
-          * subscription_id: A unique "clean" (alphanumeric with '_') ID of the course.
-          * latest_updates:  Reserved for future use.
-          * end: The end date of the course.
-          * name: The name of the course.
-          * course_handouts: The URI to get data for course handouts.
-          * start: The date and time the course starts.
-          * course_image: The path to the course image.
+          * start: The date and time when the course starts.
+          * subscription_id: A unique "clean" (alphanumeric with '_') ID of
+            the course.
+          * video_outline: The URI to get the list of all videos that the user
+            can access in the course.
+
+        * created: The date the course was created.
+        * is_active: Whether the course is currently active. Possible values
+          are true or false.
+        * mode: The type of certificate registration for this course (honor or
+          certified).
+        * url: URL to the downloadable version of the certificate, if exists.
     """
     queryset = CourseEnrollment.objects.all()
     serializer_class = CourseEnrollmentSerializer
