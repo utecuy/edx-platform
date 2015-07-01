@@ -87,7 +87,8 @@ function (VideoPlayer, i18n, moment) {
         trigger: trigger,
         youtubeId: youtubeId,
         loadHtmlPlayer: loadHtmlPlayer,
-        loadYoutubePlayer: loadYoutubePlayer
+        loadYoutubePlayer: loadYoutubePlayer,
+        loadYouTubeIFrameAPI: loadYouTubeIFrameAPI
     },
 
         _youtubeApiDeferred = null,
@@ -208,6 +209,22 @@ function (VideoPlayer, i18n, moment) {
             state.modules.push(video);
             state.__dfd__.resolve();
         }
+    }
+
+    function _waitForYoutubeApi(state) {
+        console.log('[Video info]: YouTube API is not loaded. Will try to load...');
+
+        window.setTimeout(function () {
+            // If YouTube API will load OK, it will run `onYouTubeIframeAPIReady`
+            // callback, which will set `state.youtubeApiAvailable` to `true`.
+            // If something goes wrong at this stage, `state.youtubeApiAvailable` is
+            // `false`.
+            if (!state.youtubeIsAvailable) {
+                console.log('[Video info]: YouTube API is not available.');
+            }
+            state.el.trigger('youtube_availability', [state.youtubeIsAvailable]);
+        }, state.config.ytTestTimeout);
+
     }
 
     // function _configureCaptions(state)
@@ -481,8 +498,7 @@ function (VideoPlayer, i18n, moment) {
 
             // If in reality the timeout was to short, try to
             // continue loading the YouTube video anyways.
-            this.fetchMetadata();
-            this.parseSpeed();
+            this.loadYoutubePlayer();
         } else {
             console.log(
                 '[Video info]: Change player mode to HTML5.'
@@ -491,11 +507,14 @@ function (VideoPlayer, i18n, moment) {
             // In-browser HTML5 player does not support quality
             // control.
             this.el.find('a.quality_control').hide();
+            _renderElements(this);
         }
-        _renderElements(this);
     }
 
-
+    function loadYouTubeIFrameAPI(scriptTag) {
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
+    }
     // function initialize(element)
     // The function set initial configuration and preparation.
 
@@ -560,20 +579,10 @@ function (VideoPlayer, i18n, moment) {
         } else {
             _renderElements(this);
 
-            console.log('[Video info]: YouTube API is not loaded. Will try to load...');
-            window.setTimeout(function () {
-                // If YouTube API will load OK, it will run `onYouTubeIframeAPIReady`
-                // callback, which will set `state.youtubeApiAvailable` to `true`.
-                // If something goes wrong at this stage, `state.youtubeApiAvailable` is
-                // `false`.
-                if (!self.youtubeIsAvailable) {
-                    console.log('[Video info]: YouTube API is not available.');
-                }
-                self.el.trigger('youtube_availability', [self.youtubeIsAvailable]);
-            }, self.config.ytTestTimeout);
+            _waitForYoutubeApi(this);
 
             var scriptTag = document.createElement('script');
-            scriptTag.src = document.location.protocol + '//' + this.config.ytApiUrl;
+            scriptTag.src = 'https://' + this.config.ytApiUrl;
 
             $(scriptTag).on('load', function() {
                 self.loadYoutubePlayer();
@@ -582,13 +591,7 @@ function (VideoPlayer, i18n, moment) {
                 self.loadHtmlPlayer();
             });
 
-            if(!window.injectScriptTagToDOM) {
-                window.injectScriptTagToDOM = function (scriptTag) {
-                    var firstScriptTag = document.getElementsByTagName('script')[0];
-                    firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
-                }
-            }
-            window.injectScriptTagToDOM(scriptTag);
+            this.loadYouTubeIFrameAPI(scriptTag);
         }
         return __dfd__.promise();
     }
@@ -691,7 +694,7 @@ function (VideoPlayer, i18n, moment) {
         }
 
         return $.ajax({
-            url: ['https:', '//', this.config.ytTestUrl, '?id=', url,
+            url: ['https://', this.config.ytTestUrl, '?id=', url,
                 '&part=contentDetails&key=', this.config.ytKey ,'&referrer=*.edx.org/*'].join(''),
             timeout: this.config.ytTestTimeout,
             success: _.isFunction(callback) ? callback : null
