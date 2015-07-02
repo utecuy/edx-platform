@@ -24,6 +24,8 @@ def autodiscover():     # pylint: disable=function-redefined
     Auto-Discover admin models.
     """
     django_autodiscover()
-    for model, modeladmin in django_site._registry.items():     # pylint: disable=protected-access
-        if model not in site._registry:                         # pylint: disable=protected-access
+
+    # pylint: disable=protected-access
+    for model, modeladmin in django_site._registry.items():
+        if model not in site._registry:
             site.register(model, modeladmin.__class__)
