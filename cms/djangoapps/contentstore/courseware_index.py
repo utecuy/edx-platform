@@ -111,8 +111,7 @@ class SearchIndexerBase(object):
             exclude_dictionary={"id": list(exclude_items)}
         )
         result_ids = [result["data"]["id"] for result in response["results"]]
-        for result_id in result_ids:
-            searcher.remove(cls.DOCUMENT_TYPE, result_id)
+        searcher.remove(cls.DOCUMENT_TYPE, result_ids)
 
     @classmethod
     def index(cls, modulestore, structure_key, triggered_at=None, reindex_age=REINDEX_AGE):
@@ -152,6 +151,8 @@ class SearchIndexerBase(object):
         # This is used in order to build a query to remove those items not in this
         # list - those are ready to be destroyed
         indexed_items = set()
+
+        items_index_dict = []
 
         def get_item_location(item):
             """
@@ -234,7 +235,7 @@ class SearchIndexerBase(object):
                     item_index['start_date'] = item.start
                 item_index['content_groups'] = item_content_groups if item_content_groups else None
                 item_index.update(cls.supplemental_fields(item))
-                searcher.index(cls.DOCUMENT_TYPE, item_index)
+                items_index_dict.append(item_index)
                 indexed_count["count"] += 1
                 return item_content_groups
             except Exception as err:  # pylint: disable=broad-except
@@ -253,6 +254,7 @@ class SearchIndexerBase(object):
                 # Now index the content
                 for item in structure.get_children():
                     index_item(item, groups_usage_info=groups_usage_info)
+                searcher.index(cls.DOCUMENT_TYPE, items_index_dict)
                 cls.remove_deleted_items(searcher, structure_key, indexed_items)
         except Exception as err:  # pylint: disable=broad-except
             # broad exception so that index operation does not prevent the rest of the application from working
@@ -623,7 +625,7 @@ class CourseAboutSearchIndexer(object):
 
         # Broad exception handler to protect around and report problems with indexing
         try:
-            searcher.index(cls.DISCOVERY_DOCUMENT_TYPE, course_info)
+            searcher.index(cls.DISCOVERY_DOCUMENT_TYPE, [course_info])
         except:  # pylint: disable=bare-except
             log.exception(
                 "Course discovery indexing error encountered, course discovery index may be out of date %s",
