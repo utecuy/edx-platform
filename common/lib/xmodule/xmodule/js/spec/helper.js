@@ -250,16 +250,17 @@
 
         jasmine.stubRequests();
 
-
-        spyOn(window.Video, 'loadYouTubeIFrameAPI').andCallFake(function (scriptTag) {
-            var event = document.createEvent('Event');
-            if (fixture === "video.html") {
-                event.initEvent('load', false, false);
-            } else {
-                event.initEvent('error', false, false);
-            }
-            scriptTag.dispatchEvent(event);
-        });
+        if (!window.Video.loadYouTubeIFrameAPI) {
+            spyOn(window.Video, 'loadYouTubeIFrameAPI').andCallFake(function (scriptTag) {
+                var event = document.createEvent('Event');
+                if (fixture === "video.html") {
+                    event.initEvent('load', false, false);
+                } else {
+                    event.initEvent('error', false, false);
+                }
+                scriptTag.dispatchEvent(event);
+            });
+        }
 
         state = new window.Video('#example');
 
