@@ -135,7 +135,7 @@ class ProfileImageRemoveView(APIView):
 
           Users without staff access can only remove their own profile images.
 
-    **Example Requests**
+    **Example Request**
 
         POST /api/profile_images/v1/{username}/remove
 

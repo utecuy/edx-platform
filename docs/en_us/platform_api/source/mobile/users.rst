@@ -2,7 +2,7 @@
 Mobile User API
 ####################################
 
-With the Mobile User API resource, you can complete the following actions.
+With the Mobile User API resource, you can complete the following tasks.
 
 * - :ref:`Get details about a user<Get User Details>`.
 * - :ref:`Get course enrollments for a user<Get a User's Course Enrollments>`.

@@ -69,6 +69,9 @@ class CourseHandoutsList(generics.ListAPIView):
 
     **Response Values**
 
+        If the request is successful, the request returns an HTTP 200 "OK"
+        response along with the following value.
+
         * handouts_html: The HTML for course handouts.
     """
 

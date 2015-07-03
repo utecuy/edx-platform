@@ -45,7 +45,6 @@ class UserDetail(generics.RetrieveAPIView):
 
         GET /api/mobile/v0.5/users/{username}
 
-
     **Response Values**
 
         If the request is successful, the request returns an HTTP 200 "OK" response.
@@ -93,7 +92,8 @@ class UserCourseStatus(views.APIView):
 
         The HTTP 200 response has the following values.
 
-        * last_visited_module_id: The ID of the last module that the user visited in the course.
+        * last_visited_module_id: The ID of the last module that the user
+          visited in the course.
         * last_visited_module_path: The ID of the modules in the path from the
           last visited module to the course module.
     """

@@ -48,18 +48,6 @@ Get Course Handouts
 
 .. autoclass:: mobile_api.course_info.views.CourseHandoutsList
 
-**Use Case**
-
-Get the HTML for course handouts.
-
-**Example request**:
-
-``GET /api/mobile/v0.5/course_info/{organization}/{course_number}/{course_run}/handouts``
-
-**Response Values**
-
-* handouts_html: The HTML for course handouts.
-
 **Example response**
 
 .. code-block:: json

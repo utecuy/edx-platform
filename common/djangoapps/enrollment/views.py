@@ -193,7 +193,7 @@ class EnrollmentCourseDetailView(APIView):
 
             GET /api/enrollment/v1/course/{course_id}
 
-            GET /api/v1/enrollment/course/{course_id}?include_expired=1
+            GET /api/enrollment/v1/course/{course_id}?include_expired=1
 
         **Response Values**
 
@@ -275,12 +275,12 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
     """
         **Use Cases**
 
-            * Get a list of all course enrollments for the currently logged in user.
+            * Get a list of all course enrollments for the currently signed in user.
 
-            * Enroll the currently logged in user in a course.
+            * Enroll the currently signed in user in a course.
 
               Currently a user can use this command only to enroll the user in
-              "honor" mode. If honor mode is not supported for the course, the
+              honor mode. If honor mode is not supported for the course, the
               request fails and returns the available modes.
 
               This command can use a server-to-server call to enroll a user in
@@ -294,18 +294,8 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
 
             POST /api/enrollment/v1/enrollment{"mode": "honor", "course_details":{"course_id": "edX/DemoX/Demo_Course"}}
 
-        **Post Parameters**
-
             A POST request can include the following parameters.
 
-            * user: Optional. The user ID of the currently logged in user. You
-              cannot use the command to enroll a different user.
-            * mode: Optional. The course mode for the enrollment. Individual
-              users cannot upgrade their enrollment mode from "honor". Only
-              server-to-server requests can enroll with other modes.
-            * is_active: Optional. A Boolean value that indicates whether the
-              enrollment is active. Only server-to-server requests can
-              deactivate an enrollment.
             * course details: A collection that includes the following
               information.
 
@@ -314,6 +304,14 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
             * email_opt_in: Optional. A Boolean value that indicates whether
               the user wants to receive email from the organization that runs
               this course.
+            * is_active: Optional. A Boolean value that indicates whether the
+              enrollment is active. Only server-to-server requests can
+              deactivate an enrollment.
+            * user: Optional. The user ID of the currently logged in user. You
+              cannot use the command to enroll a different user.
+            * mode: Optional. The course mode for the enrollment. Individual
+              users cannot upgrade their enrollment mode from "honor". Only
+              server-to-server requests can enroll with other modes.
 
         **Response Values**
 
@@ -372,10 +370,6 @@ class EnrollmentListView(APIView, ApiKeyPermissionMixIn):
             * is_active: Whether the enrollment is currently active.
             * mode: The enrollment mode of the user in this course.
             * user: The ID of the user.
-
-
-
-
     """
 
     authentication_classes = OAuth2AuthenticationAllowInactiveUser, EnrollmentCrossDomainSessionAuth
