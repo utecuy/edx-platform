@@ -950,6 +950,7 @@ class StudentAdminPage(PageObject):
             self.delete_student_state_button.click()
             self.wait_for_ajax()
 
+
 class CertificatesPage(PageObject):
     """
     Certificates section of the Instructor dashboard.

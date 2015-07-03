@@ -11,7 +11,7 @@ import mock
 from course_creators.admin import CourseCreatorAdmin
 from course_creators.models import CourseCreator
 from django.core import mail
-from django_sudo.utils import region_name
+from sudo.utils import region_name
 from student.roles import CourseCreatorRole
 from student import auth
 
@@ -51,9 +51,8 @@ class CourseCreatorAdminTest(TestCase):
         """
         Grant sudo access to staff or instructor user.
         """
-        region = region_name(region)
         self.client.post(
-            '/sudo/?region={}'.format(region),
+            '/sudo/?region={}'.format(region_name(region)),
             {'password': password},
             follow=True
         )

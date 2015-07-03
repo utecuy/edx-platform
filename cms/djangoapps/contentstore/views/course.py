@@ -75,7 +75,6 @@ from .item import create_xblock_info
 from contentstore.push_notification import push_notification_enabled
 from course_creators.views import get_course_creator_status, add_user_with_status_unrequested
 from contentstore import utils
-from django_sudo.utils import region_name
 from sudo.utils import revoke_sudo_privileges
 from student.roles import (
     CourseInstructorRole, CourseStaffRole, CourseCreatorRole, GlobalStaff, UserBasedRole
@@ -264,9 +263,8 @@ def course_handler(request, course_key_string=None):
                 return redirect(reverse("home"))
             else:
                 # Revoke sudo privileges from a request explicitly
-                region = region_name(course_key_string)
-                if request.is_sudo(region=region):
-                    revoke_sudo_privileges(request, region=region)
+                if request.is_sudo(region=course_key_string):
+                    revoke_sudo_privileges(request, region=course_key_string)
                 return course_index(request, CourseKey.from_string(course_key_string))
         else:
             return HttpResponseNotFound()

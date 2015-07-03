@@ -6,7 +6,6 @@ from functools import wraps
 from sudo.settings import RESET_TOKEN
 from sudo.utils import new_sudo_token_on_activity
 from sudo.views import redirect_to_sudo
-from django_sudo.utils import region_name
 
 
 def sudo_required(func_or_region):
@@ -36,8 +35,6 @@ def sudo_required(func_or_region):
                 course_specific_region = kwargs.get('course_key_string')
             if 'library_key_string' in kwargs:
                 course_specific_region = kwargs.get('library_key_string')
-            if course_specific_region:
-                course_specific_region = region_name(course_specific_region)
 
             # N.B. region is captured from the enclosing sudo_required function
             if not request.is_sudo(region=region or course_specific_region):
