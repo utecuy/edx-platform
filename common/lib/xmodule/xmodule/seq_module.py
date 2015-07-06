@@ -1,9 +1,6 @@
 import json
 import logging
 import warnings
-import pytz
-
-from datetime import datetime, timedelta
 
 from lxml import etree
 
@@ -83,7 +80,7 @@ class SequenceFields(object):
 
 @XBlock.needs('proctoring')
 @XBlock.needs('user')
-class SequenceModule(SequenceFields, XModule):
+class SequenceModule(SequenceFields, XModule):  # pylint: disable=abstract-method
     ''' Layout module which lays out content in a temporal sequence
     '''
     js = {
