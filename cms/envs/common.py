@@ -171,7 +171,7 @@ FEATURES = {
     },
 
     # Teams feature
-    'ENABLE_TEAMS': False,
+    'ENABLE_TEAMS': True,
 
     # Show video bumper in Studio
     'ENABLE_VIDEO_BUMPER': False,

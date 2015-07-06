@@ -347,7 +347,7 @@ FEATURES = {
     'ENABLE_FOOTER_MOBILE_APP_LINKS': False,
 
     # Let students save and manage their annotations
-    'ENABLE_EDXNOTES': False,
+    'ENABLE_EDXNOTES': True,
 
     # Milestones application flag
     'MILESTONES_APP': False,
@@ -397,7 +397,7 @@ FEATURES = {
     'ENABLE_SOFTWARE_SECURE_FAKE': False,
 
     # Teams feature
-    'ENABLE_TEAMS': False,
+    'ENABLE_TEAMS': True,
 
     # Show video bumper in LMS
     'ENABLE_VIDEO_BUMPER': False,
