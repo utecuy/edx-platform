@@ -8,7 +8,9 @@ from mock import patch
 from nose.plugins.attrib import attr
 from opaque_keys.edx.locations import SlashSeparatedCourseKey
 
-from courseware.grades import descriptor_affects_grading, grade, iterate_grades_for, MaxScoresCache
+from courseware.grades import (
+    descriptor_affects_grading, field_data_cache_for_grading, grade, iterate_grades_for, MaxScoresCache
+)
 from courseware.model_data import FieldDataCache
 from student.tests.factories import UserFactory
 from student.models import CourseEnrollment
@@ -187,22 +189,11 @@ class TestDescriptorFilter(ModuleStoreTestCase):
 
         CourseEnrollment.enroll(self.student, self.course.id)
 
-    def test_field_data_cache_no_filter(self):
-        field_data_cache_no_filter = FieldDataCache.cache_for_descriptor_descendents(
-            self.course.id, self.student, self.course, depth=None
-        )
-        categories = set(descriptor.category for descriptor in field_data_cache_no_filter.descriptors)
-        self.assertIn('video', categories)
-        self.assertIn('html', categories)
-        self.assertIn('discussion', categories)
-        self.assertIn('problem', categories)
-
-    def test_field_data_cache_filter(self):
-        field_data_cache_filter = FieldDataCache.cache_for_descriptor_descendents(
-            self.course.id, self.student, self.course, depth=None, descriptor_filter=descriptor_affects_grading
-        )
-        categories = set(descriptor.category for descriptor in field_data_cache_filter.descriptors)
-        self.assertNotIn('video', categories)
-        self.assertNotIn('html', categories)
-        self.assertNotIn('discussion', categories)
-        self.assertIn('problem', categories)
+    def test_field_data_cache_scorable_locations(self):
+        """Only scorable locations should be in FieldDataCache.scorable_locations."""
+        fd_cache = field_data_cache_for_grading(self.course, self.student)
+        block_types = set(loc.block_type for loc in fd_cache.scorable_locations)
+        self.assertNotIn('video', block_types)
+        self.assertNotIn('html', block_types)
+        self.assertNotIn('discussion', block_types)
+        self.assertIn('problem', block_types)
