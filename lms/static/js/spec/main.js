@@ -61,7 +61,6 @@
 
             // Manually specify LMS files that are not converted to RequireJS
             'history': 'js/vendor/history',
-            'js/mustache': 'js/mustache',
             'js/staff_debug_actions': 'js/staff_debug_actions',
             'js/vendor/jquery.qubit': 'js/vendor/jquery.qubit',
 

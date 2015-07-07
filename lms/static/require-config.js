@@ -43,6 +43,7 @@
             "jquery.fileupload": "js/vendor/jQuery-File-Upload/js/jquery.fileupload",
             "URI": "js/vendor/URI.min",
             "string_utils": "js/src/string_utils",
+            "mustache": "js/vendor/mustache",
 
             // Files needed by OVA
             "annotator": "js/vendor/ova/annotator-full",
