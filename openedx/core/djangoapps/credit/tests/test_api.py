@@ -47,6 +47,8 @@ class CreditApiTestBase(TestCase):
     PROVIDER_NAME = "Hogwarts School of Witchcraft and Wizardry"
     PROVIDER_URL = "https://credit.example.com/request"
     PROVIDER_STATUS_URL = "https://credit.example.com/status"
+    ENABLE_INTEGRATION = True
+    FULFILLMENT_INSTRUCTIONS = "Sample fulfillment instruction for credit completion."
 
     def setUp(self, **kwargs):
         super(CreditApiTestBase, self).setUp()
@@ -61,7 +63,8 @@ class CreditApiTestBase(TestCase):
             display_name=self.PROVIDER_NAME,
             provider_url=self.PROVIDER_URL,
             provider_status_url=self.PROVIDER_STATUS_URL,
-            enable_integration=True,
+            enable_integration=self.ENABLE_INTEGRATION,
+            fulfillment_instructions=self.FULFILLMENT_INSTRUCTIONS
         )
 
         return credit_course
@@ -445,6 +448,25 @@ class CreditProviderIntegrationApiTests(CreditApiTestBase):
 
         result = api.get_credit_providers()
         self.assertEqual(result, [])
+
+    def test_get_credit_provider_details(self):
+        """Test that credit api method 'test_get_credit_provider_details'
+        returns dictionary data related to provided credit provider.
+        """
+        expected_result = {
+            "provider_id": self.PROVIDER_ID,
+            "display_name": self.PROVIDER_NAME,
+            "provider_url": self.PROVIDER_URL,
+            "provider_status_url": self.PROVIDER_STATUS_URL,
+            "enable_integration": self.ENABLE_INTEGRATION,
+            "fulfillment_instructions": self.FULFILLMENT_INSTRUCTIONS
+        }
+        result = api.get_credit_provider_details(self.PROVIDER_ID)
+        self.assertEqual(result, expected_result)
+
+        # now test that user gets empty dict for non existent credit provider
+        result = api.get_credit_provider_details('fake_provider_id')
+        self.assertEqual(result, {})
 
     def test_credit_request(self):
         # Initiate a credit request
