@@ -152,7 +152,7 @@ class SearchIndexerBase(object):
         # list - those are ready to be destroyed
         indexed_items = set()
 
-        # items_index is a dict of all the items index dictionaries. 
+        # items_index is a list of all the items index dictionaries.
         # it is used to collect all indexes and index them using bulk API,
         # instead of per item index API call.
         items_index = []
