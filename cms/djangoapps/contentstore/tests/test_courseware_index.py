@@ -1167,7 +1167,7 @@ class GroupConfigurationSearchMongo(CourseTestCase, MixedWithOptionsTestCase):
 
     def _html_group_result(self, html_unit, content_groups):
         """
-        Return call object with arguments and content group for html_unit.
+        Return object with arguments and content group for html_unit.
         """
         return {
             'course_name': unicode(self.course.display_name),
@@ -1187,7 +1187,7 @@ class GroupConfigurationSearchMongo(CourseTestCase, MixedWithOptionsTestCase):
 
     def _html_experiment_group_result(self, html_unit, content_groups):
         """
-        Return call object with arguments and content group for html_unit.
+        Return object with arguments and content group for html_unit.
         """
         return {
             'course_name': unicode(self.course.display_name),
@@ -1207,7 +1207,7 @@ class GroupConfigurationSearchMongo(CourseTestCase, MixedWithOptionsTestCase):
 
     def _vertical_experiment_group_result(self, vertical, content_groups):
         """
-        Return call object with arguments and content group for split_test vertical.
+        Return object with arguments and content group for split_test vertical.
         """
         return {
             'start_date': datetime(2015, 4, 1, 0, 0, tzinfo=tzutc()),
@@ -1227,7 +1227,7 @@ class GroupConfigurationSearchMongo(CourseTestCase, MixedWithOptionsTestCase):
 
     def _html_nogroup_result(self, html_unit):
         """
-        Return call object with arguments and content group set to empty array for html_unit.
+        Return object with arguments and content group set to empty array for html_unit.
         """
         return {
             'course_name': unicode(self.course.display_name),

@@ -141,7 +141,7 @@ class SearchIndexerBase(object):
         structure_key = cls.normalize_structure_key(structure_key)
         location_info = cls._get_location_info(structure_key)
 
-        # Wrap counter in dictionary - otherwise we seem to lose scope inside the embedded function `index_item`
+        # Wrap counter in dictionary - otherwise we seem to lose scope inside the embedded function `prepare_item_index`
         indexed_count = {
             "count": 0
         }
@@ -152,7 +152,10 @@ class SearchIndexerBase(object):
         # list - those are ready to be destroyed
         indexed_items = set()
 
-        items_index_dict = []
+        # items_index is a dict of all the items index dictionaries. 
+        # it is used to collect all indexes and index them using bulk API,
+        # instead of per item index API call.
+        items_index = []
 
         def get_item_location(item):
             """
@@ -160,9 +163,9 @@ class SearchIndexerBase(object):
             """
             return item.location.version_agnostic().replace(branch=None)
 
-        def index_item(item, skip_index=False, groups_usage_info=None):
+        def prepare_item_index(item, skip_index=False, groups_usage_info=None):
             """
-            Add this item to the search index and indexed_items list
+            Add this item to the items_index and indexed_items list
 
             Arguments:
             item - item to add to index, its children will be processed recursively
@@ -213,7 +216,7 @@ class SearchIndexerBase(object):
                 for child_item in item.get_children():
                     if modulestore.has_published_version(child_item):
                         children_groups_usage.append(
-                            index_item(
+                            prepare_item_index(
                                 child_item,
                                 skip_index=skip_child_index,
                                 groups_usage_info=groups_usage_info
@@ -235,7 +238,7 @@ class SearchIndexerBase(object):
                     item_index['start_date'] = item.start
                 item_index['content_groups'] = item_content_groups if item_content_groups else None
                 item_index.update(cls.supplemental_fields(item))
-                items_index_dict.append(item_index)
+                items_index.append(item_index)
                 indexed_count["count"] += 1
                 return item_content_groups
             except Exception as err:  # pylint: disable=broad-except
@@ -253,8 +256,8 @@ class SearchIndexerBase(object):
 
                 # Now index the content
                 for item in structure.get_children():
-                    index_item(item, groups_usage_info=groups_usage_info)
-                searcher.index(cls.DOCUMENT_TYPE, items_index_dict)
+                    prepare_item_index(item, groups_usage_info=groups_usage_info)
+                searcher.index(cls.DOCUMENT_TYPE, items_index)
                 cls.remove_deleted_items(searcher, structure_key, indexed_items)
         except Exception as err:  # pylint: disable=broad-except
             # broad exception so that index operation does not prevent the rest of the application from working
