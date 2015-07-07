@@ -1,3 +1,4 @@
+# pylint: disable=abstract-method
 import json
 import logging
 import warnings
@@ -80,7 +81,7 @@ class SequenceFields(object):
 
 @XBlock.needs('proctoring')
 @XBlock.needs('user')
-class SequenceModule(SequenceFields, XModule):  # pylint: disable=abstract-method
+class SequenceModule(SequenceFields, XModule):
     ''' Layout module which lays out content in a temporal sequence
     '''
     js = {
