@@ -1520,7 +1520,9 @@ def create_account_with_params(request, params):
             external_auth.views.SHIBBOLETH_DOMAIN_PREFIX
         )
     )
-
+    # Hack incluido por maxi
+    tos_required = False
+    # End Hack
     form = AccountCreationForm(
         data=params,
         extra_fields=extra_fields,
