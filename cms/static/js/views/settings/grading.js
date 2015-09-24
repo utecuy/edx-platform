@@ -142,7 +142,7 @@ var GradingView = ValidatingView.extend({
 
     // A does not have a drag bar (cannot change its upper limit)
     // Need to insert new bars in right place.
-    GRADES : ['A', 'B', 'C', 'D'],	// defaults for new grade designators
+    GRADES : ['5', '4', '3', '2'],	// defaults for new grade designators
     descendingCutoffs : [],  // array of { designation : , cutoff : }
     gradeBarWidth : null, // cache of value since it won't change (more certain)
 
@@ -346,7 +346,7 @@ var GradingView = ValidatingView.extend({
 
     failLabel: function() {
         if (this.descendingCutoffs.length === 1) return 'Fail';
-        else return 'F';
+        else return '1';
     },
     setFailLabel: function() {
         this.$el.find('.grades .letter-grade').last().html(this.failLabel());
