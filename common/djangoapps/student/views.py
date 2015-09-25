@@ -1521,7 +1521,7 @@ def create_account_with_params(request, params):
         )
     )
     # Hack incluido por maxi
-    tos_required = False
+    tos_required = settings.FEATURES.get("UTEC_TOS_REQUIRED", tos_required)
     # End Hack
     form = AccountCreationForm(
         data=params,
