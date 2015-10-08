@@ -43,11 +43,13 @@
                 </button>
             <% } %>
         </div>
+        <% if (context.utecThirdPartyAuthPriority && context.utecThirdPartyAuthPriority == 'False') { %>
         <div class="section-title lines">
             <h2>
                 <span class="text"><%- gettext("or create a new one here") %></span>
             </h2>
         </div>
+        <% } %>
     <% } else { %>
         <div class="section-title lines">
             <h2>
@@ -56,10 +58,12 @@
         </div>
     <% } %>
 
-    <%= context.fields %>
+    <% if ((context.utecThirdPartyAuthPriority && context.utecThirdPartyAuthPriority == 'False') || (context.currentProvider)) { %>
+        <%= context.fields %>
+        <button type="submit" class="action action-primary action-update js-register register-button"><%- gettext("Create your account") %></button>
+        <p class="note">* <%- gettext("Required field") %></p>
+    <% } %>
 
-    <button type="submit" class="action action-primary action-update js-register register-button"><%- gettext("Create your account") %></button>
-    <p class="note">* <%- gettext("Required field") %></p>
 </form>
 
 <div class="toggle-form">

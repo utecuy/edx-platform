@@ -16,6 +16,7 @@ var edx = edx || {};
         platformName: container.data('platform-name'),
         loginFormDesc: container.data('login-form-desc'),
         registrationFormDesc: container.data('registration-form-desc'),
-        passwordResetFormDesc: container.data('password-reset-form-desc')
+        passwordResetFormDesc: container.data('password-reset-form-desc'),
+        utecThirdPartyAuthPriority: container.data('utec-third-party-auth-priority')
     });
 })(jQuery);

@@ -63,6 +63,8 @@ var edx = edx || {};
 
             this.platformName = obj.platformName;
 
+            this.utecThirdPartyAuthPriority = obj.utecThirdPartyAuthPriority;
+
             // The login view listens for 'sync' events from the reset model
             this.resetModel = new edx.student.account.PasswordResetModel({}, {
                 method: 'GET',
@@ -112,7 +114,8 @@ var edx = edx || {};
                     model: model,
                     resetModel: this.resetModel,
                     thirdPartyAuth: this.thirdPartyAuth,
-                    platformName: this.platformName
+                    platformName: this.platformName,
+                    utecThirdPartyAuthPriority: this.utecThirdPartyAuthPriority
                 });
 
                 // Listen for 'password-help' event to toggle sub-views
@@ -149,7 +152,8 @@ var edx = edx || {};
                     fields: data.fields,
                     model: model,
                     thirdPartyAuth: this.thirdPartyAuth,
-                    platformName: this.platformName
+                    platformName: this.platformName,
+                    utecThirdPartyAuthPriority: this.utecThirdPartyAuthPriority
                 });
 
                 // Listen for 'auth-complete' event so we can enroll/redirect the user appropriately.

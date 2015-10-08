@@ -29,6 +29,7 @@ var edx = edx || {};
             this.errorMessage = data.thirdPartyAuth.errorMessage || '';
             this.platformName = data.platformName;
             this.autoSubmit = data.thirdPartyAuth.autoSubmitRegForm;
+            this.utecThirdPartyAuthPriority = data.utecThirdPartyAuthPriority;
 
             this.listenTo( this.model, 'sync', this.saveSuccess );
         },
@@ -46,7 +47,8 @@ var edx = edx || {};
                     errorMessage: this.errorMessage,
                     providers: this.providers,
                     hasSecondaryProviders: this.hasSecondaryProviders,
-                    platformName: this.platformName
+                    platformName: this.platformName,
+                    utecThirdPartyAuthPriority: this.utecThirdPartyAuthPriority
                 }
             }));
 
