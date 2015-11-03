@@ -297,6 +297,7 @@ def _update_certificate_context(context, course, user, user_certificate):
 
     context['username'] = user.username
     context['course_mode'] = user_certificate.mode
+    context['grade'] = user_certificate.grade
     context['accomplishment_user_id'] = user.id
     context['accomplishment_copy_name'] = user_fullname
     context['accomplishment_copy_username'] = user.username
@@ -426,6 +427,14 @@ def _update_certificate_context(context, course, user, user_certificate):
         platform_name=platform_name,
         certificate_type=context.get("certificate_type")
     )
+
+    if settings.FEATURES['UTEC_CUSTOM_CERTS_GRADE']:
+        for key, val in settings.FEATURES['UTEC_GRADE'].iteritems():
+            if float(val['min']) <= float(user_certificate.grade) <= float(val['max']):
+                utec_grade = val['label']
+        context['utec_final_grade'] = _('La calificacion de aprobacion es %(grade)s' % {'grade': utec_grade})
+    else:
+        context['utec_final_grade'] = False
 
     certificate_type_description = get_certificate_description(user_certificate.mode, certificate_type, platform_name)
     if certificate_type_description:
