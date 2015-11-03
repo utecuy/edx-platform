@@ -2,6 +2,7 @@
 Django module container for classes and operations related to the "Course Module" content type
 """
 import logging
+from django.conf import settings
 from cStringIO import StringIO
 from math import exp
 from lxml import etree
@@ -1136,6 +1137,13 @@ class CourseDescriptor(CourseFields, SequenceDescriptor, LicenseMixin):
     @property
     def lowest_passing_grade(self):
         return min(self._grading_policy['GRADE_CUTOFFS'].values())
+
+    @property
+    def utec_lowest_passing_grade(self):
+        logging.info(settings.FEATURES['UTEC_GRADE'])
+        for key, val in settings.FEATURES['UTEC_GRADE'].iteritems():
+            if float(val['min']) <= float(min(self._grading_policy['GRADE_CUTOFFS'].values())) <= float(val['max']):
+                return val['label']
 
     @property
     def is_cohorted(self):
