@@ -374,7 +374,7 @@ def account_settings_context(request):
             }, 'year_of_birth': {
                 'options': year_of_birth_options,
             }, 'preferred_language': {
-                'options': settings.ALL_LANGUAGES,
+                'options': [[u'es', u'Espanol'],], # for all options settings.ALL_LANGUAGES
             }
         },
         'platform_name': settings.PLATFORM_NAME,
