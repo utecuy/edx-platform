@@ -127,27 +127,27 @@
                 }
             ];
 
-            if (_.isArray(authData.providers)) {
-                var accountsSectionData = {
-                    title: gettext('Connected Accounts'),
-                    fields: _.map(authData.providers, function(provider) {
-                        return {
-                            'view': new AccountSettingsFieldViews.AuthFieldView({
-                                title: provider.name,
-                                screenReaderTitle: interpolate_text(
-                                    gettext("Connect your {accountName} account"), {accountName: provider['name']}
-                                ),
-                                valueAttribute: 'auth-' + provider.id,
-                                helpMessage: '',
-                                connected: provider.connected,
-                                connectUrl: provider.connect_url,
-                                disconnectUrl: provider.disconnect_url
-                            })
-                        };
-                    })
-                };
-                sectionsData.push(accountsSectionData);
-            }
+            // if (_.isArray(authData.providers)) {
+            //     var accountsSectionData = {
+            //         title: gettext('Connected Accounts'),
+            //         fields: _.map(authData.providers, function(provider) {
+            //             return {
+            //                 'view': new AccountSettingsFieldViews.AuthFieldView({
+            //                     title: provider.name,
+            //                     screenReaderTitle: interpolate_text(
+            //                         gettext("Connect your {accountName} account"), {accountName: provider['name']}
+            //                     ),
+            //                     valueAttribute: 'auth-' + provider.id,
+            //                     helpMessage: '',
+            //                     connected: provider.connected,
+            //                     connectUrl: provider.connect_url,
+            //                     disconnectUrl: provider.disconnect_url
+            //                 })
+            //             };
+            //         })
+            //     };
+            //     sectionsData.push(accountsSectionData);
+            // }
 
             var accountSettingsView = new AccountSettingsView({
                 model: userAccountModel,
