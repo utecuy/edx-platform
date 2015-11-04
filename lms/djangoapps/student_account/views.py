@@ -362,7 +362,7 @@ def account_settings_context(request):
         'duplicate_provider': None,
         'fields': {
             'country': {
-                'options': list(countries),
+                'options': [['UY', 'Uruguay'],], # para obtener todos list(countries)
             }, 'gender': {
                 'options': [(choice[0], _(choice[1])) for choice in UserProfile.GENDER_CHOICES],  # pylint: disable=translation-of-non-string
             }, 'language': {
