@@ -34,7 +34,9 @@ course_mode_class = course_mode if course_mode else ''
                             <span class="accomplishment-course-org">${accomplishment_copy_course_org}  </span>
                             <span class="accomplishment-course-number">101x</span>:
                             <span class="accomplishment-course-name">${accomplishment_course_title}</span>
-                            <p>${utec_final_grade}</p>
+                            % if utec_final_grade:
+                                <p>${utec_final_grade}</p>
+                            % endif
                         </span>
                     </p>
 

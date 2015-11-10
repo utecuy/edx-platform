@@ -428,7 +428,7 @@ def _update_certificate_context(context, course, user, user_certificate):
         certificate_type=context.get("certificate_type")
     )
 
-    if settings.FEATURES['UTEC_CUSTOM_CERTS_GRADE']:
+    if settings.FEATURES['UTEC_CUSTOM_CERTS_GRADE'] and user_certificate.grade:
         for key, val in settings.FEATURES['UTEC_GRADE'].iteritems():
             if float(val['min']) <= float(user_certificate.grade) <= float(val['max']):
                 utec_grade = val['label']
