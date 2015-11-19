@@ -89,7 +89,7 @@ class SysadminDashboardView(TemplateView):
         csv_file = StringIO.StringIO()
         writer = csv.writer(csv_file, dialect='excel', quotechar='"',
                             quoting=csv.QUOTE_ALL)
-
+        header = [x.encode('utf-8') for x in header]
         writer.writerow(header)
 
         # Setup streaming of the data
