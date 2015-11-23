@@ -410,7 +410,7 @@ class Courses(SysadminDashboardView):
         try:
             git_import.add_repo(gitloc, None, branch)
         except GitImportError as ex:
-            error_msg = str(ex)
+            error_msg = unicode(ex)
         ret = output.getvalue()
 
         # Remove handler hijacks
