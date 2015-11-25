@@ -33,6 +33,7 @@ var edx = edx || {};
             this.platformName = data.platformName;
             this.resetModel = data.resetModel;
             this.utecThirdPartyAuthPriority = data.utecThirdPartyAuthPriority;
+            this.autoSubmit = data.thirdPartyAuth.autoSubmitRegForm;
 
             this.listenTo( this.model, 'sync', this.saveSuccess );
             this.listenTo( this.resetModel, 'sync', this.resetEmail );
@@ -123,6 +124,9 @@ var edx = edx || {};
                  this.currentProvider ) {
                 this.element.show( this.$authError );
                 this.element.hide( this.$errors );
+                if ( this.autoSubmit ) {
+                    $('.form-toggle[data-type="register"]').trigger('click');
+                }
             } else {
                 this.element.hide( this.$authError );
                 this.element.show( this.$errors );
