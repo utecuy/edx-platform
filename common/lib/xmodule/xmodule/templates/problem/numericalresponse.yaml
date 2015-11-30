@@ -2,59 +2,53 @@
 metadata:
     display_name: Numerical Input
     markdown: |
-        In a numerical input problem, learners enter numbers or a specific and relatively simple mathematical expression. Learners enter the response in plain text, and the system then converts the text to a symbolic expression that learners can see below the response field.
+        En el problema Entrada Numérica, los estudiantes ingresan un numero o una expresión matemática específica y relativamente simple. Los estudiantes ingresan la respuesta en texto plano, luego la plataforma la convierte a una expresión simbólica que los estudiantes pueden ver debajo del campo de respuesta.
 
-        The system can handle several types of characters, including basic operators, fractions, exponents, and common constants such as "i". You can refer learners to "Entering Mathematical and Scientific Expressions" in the edX Guide for Students for more information.
+        El sistema soporta varios tipos de caracteres, incluyendo operadores básicos, fracciones, exponentes y constantes comunes como "i". Puedes buscar mas información en la guiá de edX, en la sección "Entering Mathematical and Scientific Expressions".
 
-        When you add the problem, be sure to select Settings to specify a Display Name and other values that apply.
+        Cuando agregues un problema, asegurate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-        You can use the following example problems as models.
+        Puedes usar el siguiente problema como ejemplo como modelo.
 
-        >>How many miles away from Earth is the sun? Use scientific notation to answer.<<
+        >>¿A cuentas millas de distancia se encuentra el Sol de la Tierra? Usa notación científica para escribir la respuesta.<<
+        = 9.3*10^7
+        or= 9.296*10^7
 
-        = 9.3*10^7 
-        or= 9.296*10^7 
-
-        >>The square of what number is -100?<<
-
-        = 10*i 
+        >>¿El cuadrado de que numero es -100?<<
+        = 10*i
 
         [explanation]
-        The sun is 93,000,000, or 9.3*10^7, miles away from Earth.
-        -100 is the square of 10 times the imaginary number, i.
+        El Sol esta a 93,000,000, o 9.3*10^7, millas de la Tierra.
+        -100 es el cuadrado de 10 veces el numero imaginario, i.
         [explanation]
 data: |
     <problem>
 
-    <p>In a numerical input problem, learners enter numbers or a specific and
-    relatively simple mathematical expression. Learners enter the response in
-    plain text, and the system then converts the text to a symbolic expression
-    that learners can see below the response field.</p>
+    <p>En el problema Entrada Numérica, los estudiantes ingresan un numero o una expresión matemática específica
+    y relativamente simple. Los estudiantes ingresan la respuesta en texto plano,
+    luego la plataforma la convierte a una expresión simbólica que los estudiantes
+    pueden ver debajo del campo de respuesta.</p>
+    <p>El sistema soporta varios tipos de caracteres, incluyendo operadores básicos, fracciones, exponentes y constantes comunes como "i".
+    Puedes buscar mas información en la <i>Guía  de estudiantes de edX</i>, en la sección <a href="http://edx.readthedocs.org/projects/edx-guide-for-students/en/latest/SFD_mathformatting.html" target="_blank">
+    Entering Mathematical and Scientific Expressions</a>.</p>
+    <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
+     del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
+    <p>Puedes usar el siguiente problema como ejemplo como modelo.</p>
 
-    <p>The system can handle several types of characters, including basic
-    operators, fractions, exponents, and common constants such as i. You can 
-    refer learners to 
-    <a href="http://edx.readthedocs.org/projects/edx-guide-for-students/en/latest/SFD_mathformatting.html" target="_blank">
-    Entering Mathematical and Scientific Expressions</a> in the <i>edX Guide for
-    Students</i> for information about how to enter text into the field.</p>
-    <p>When you add the problem, be sure to select <strong>Settings</strong> 
-    to specify a <strong>Display Name</strong> and other values that apply.</p>
-
-    <p>You can use the following example problems as models.</p>
-      <p>How many miles away from Earth is the sun? Use scientific notation to answer.</p>
+      <p>¿A cuentas millas de distancia se encuentra el Sol de la Tierra? Usa notación científica para escribir la respuesta.</p>
       <numericalresponse answer="9.3*10^7">
-        <formulaequationinput label="How many million miles are between Earth and the sun? Use scientific notation to answer." />
+        <formulaequationinput label="¿A cuentas millas de distancia se encuentra el Sol de la Tierra? Usa notación científica para escribir la respuesta." />
       </numericalresponse>
 
-      <p>The square of what number is -100?</p>
+      <p>¿El cuadrado de que numero es -100?</p>
       <numericalresponse answer="10*i">
-        <formulaequationinput label="The square of what number is -100?" />
+        <formulaequationinput label="¿El cuadrado de que numero es -100?" />
       </numericalresponse>
     <solution>
       <div class="detailed-solution">
-        <p>Explanation</p>
-        <p>The sun is 93,000,000, or 9.3*10^7, miles away from Earth.</p>
-        <p>-100 is the square of 10 times the imaginary number, i.</p>
+        <p>Explicación</p>
+        <p>El Sol esta a 93,000,000, o 9.3*10^7, millas de la Tierra.</p>
+        <p>-100 es el cuadrado de 10 veces el numero imaginario, i.</p>
       </div>
     </solution>
     </problem>

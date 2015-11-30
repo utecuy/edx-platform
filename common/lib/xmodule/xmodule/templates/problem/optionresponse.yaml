@@ -2,35 +2,34 @@
 metadata:
     display_name: Dropdown
     markdown: |
-         Dropdown problems allow learners to select only one option from a list of options.
+         El problema Desplegar permite a los estudiantes seleccionar solo una opción de una lista de opciones.
 
-         When you add the problem, be sure to select Settings to specify a Display Name and other values that apply.
+         Cuando agregues un problema, asegurate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-         You can use the following example problem as a model.
+         Puedes usar el siguiente problema como ejemplo como modelo.
 
-          >>Which of the following countries celebrates its independence on August 15?<<
+         >>¿Cual de los siguientes países festeja su independencia el 15 de Agosto?<<
 
-          [[(India), Spain, China, Bermuda]]
+         [[(India), España, China, Bermuda]]
 
-          [explanation]
-          India became an independent nation on August 15, 1947.
-          [explanation]
+         [explanation]
+         India se convirtió en una nación independiente el 15 de Agosto de 1947.
+         [explanation]
 data: |
   <problem>
-    <p>Dropdown problems allow learners to select only one option from a list of options.</p>
-    <p>When you add the problem, be sure to select <strong>Settings</strong> 
-    to specify a <strong>Display Name</strong> and other values that apply.</p>
-    <p>You can use the following example problem as a model.</p>
-      <p>Which of the following countries celebrates its independence on August 15?</p>
+    <p>El problema Desplegar permite a los estudiantes seleccionar solo una opción de una lista de opciones.</p>
+    <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
+     del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
+    <p>Puedes usar el siguiente problema como ejemplo como modelo.</p>
+      <p>¿Cual de los siguientes países festeja su independencia el 15 de Agosto?</p>
       <br/>
       <optionresponse>
-        <optioninput options="('India','Spain','China','Bermuda')" correct="India"></optioninput>
+        <optioninput options="('India','España','China','Bermuda')" correct="India"></optioninput>
       </optionresponse>
     <solution>
       <div class="detailed-solution">
-        <p>Explanation</p>
-        <p>India became an independent nation on August 15, 1947.</p>
+        <p>Explicación</p>
+        <p>India se convirtió en una nación independiente el 15 de Agosto de 1947.</p>
       </div>
     </solution>
   </problem>
-

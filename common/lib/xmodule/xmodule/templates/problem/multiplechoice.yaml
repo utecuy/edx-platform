@@ -2,52 +2,52 @@
 metadata:
     display_name: Multiple Choice
     markdown: |
-       Multiple choice problems allow learners to select only one option. Learners can see all the options along with the problem text.
+       Los problemas de opción múltiple permiten a los estudiantes seleccionar una sola opción. Los estudiantes ven todas las opciones debajo de la letra del problema.
 
-       When you add the problem, be sure to select Settings to specify a Display Name and other values that apply.
+       Cuando agregues un problema, asegurate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-       You can use the following example problem as a model.
+       Puedes usar el siguiente problema como ejemplo como modelo.
 
-       >>Which of the following countries has the largest population?<<
-       ( ) Brazil {{ timely feedback -- explain why an almost correct answer is wrong }}
-       ( ) Germany
+       >>¿Cual de los siguientes países tiene la mayor población?<<
+       ( ) Brasil {{ respuesta casi correcta -- se puede explicar aquí, porque es la respuesta casi correcta }}
+       ( ) Alemania
        (x) Indonesia
-       ( ) Russia
+       ( ) Rusia
 
        [explanation]
-       According to September 2014 estimates:
-       The population of Indonesia is approximately 250 million.
-       The population of Brazil  is approximately 200 million.
-       The population of Russia is approximately 146 million.
-       The population of Germany is approximately 81 million.
+       De acuerdo con las estimaciones a Setiembre del 2014:
+       La población de Indonesia es de aproximadamente 250 millones.
+       La población de Brasil es de aproximadamente 200 millones.
+       La población de Rusia es de aproximadamente 146 millones.
+       La población de Alemania es de aproximadamente 81 millones.
        [explanation]
 
 data: |
    <problem>
-   <p>Multiple choice problems allow learners to select only one option.
-       Learners can see all the options along with the problem text.</p>
-   <p>When you add the problem, be sure to select <strong>Settings</strong> 
-   to specify a <strong>Display Name</strong> and other values that apply.</p>
-   <p>You can use the following example problem as a model.</p>
-      <p>Which of the following countries has the largest population?</p>
+   <p>Los problemas de opción múltiple permiten a los estudiantes seleccionar una sola opción.
+   Los estudiantes ven todas las opciones debajo de la letra del problema.</p>
+   <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
+    del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
+   <p>Puedes usar el siguiente problema como ejemplo como modelo.</p>
+      <p>¿Cual de los siguientes países tiene la mayor población?</p>
       <multiplechoiceresponse>
        <choicegroup type="MultipleChoice">
-          <choice correct="false" name="brazil">Brazil
-            <choicehint>timely feedback -- explain why an almost correct answer is wrong</choicehint>
+          <choice correct="false" name="brasil">Brasil
+            <choicehint>respuesta casi correcta -- se puede explicar aquí, porque es la respuesta casi correcta</choicehint>
           </choice>
-          <choice correct="false" name="germany">Germany</choice>
+          <choice correct="false" name="alemania">Alemania</choice>
           <choice correct="true" name="indonesia">Indonesia</choice>
-          <choice correct="false" name="russia">Russia</choice>
+          <choice correct="false" name="rusia">Rusia</choice>
        </choicegroup>
       </multiplechoiceresponse>
     <solution>
       <div class="detailed-solution">
-        <p>Explanation</p>
-        <p>According to September 2014 estimates:</p>
-        <p>The population of Indonesia is approximately 250 million.</p>
-        <p>The population of Brazil  is approximately 200 million.</p>
-        <p>The population of Russia is approximately 146 million.</p>
-        <p>The population of Germany is approximately 81 million.</p>
+        <p>Explicación</p>
+        <p>De acuerdo con las estimaciones a Setiembre del 2014:</p>
+        <p>La población de Indonesia es de aproximadamente 250 millones.</p>
+        <p>La población de Brasil es de aproximadamente 200 millones.</p>
+        <p>La población de Rusia es de aproximadamente 146 millones.</p>
+        <p>La población de Alemania es de aproximadamente 81 millones.</p>
       </div>
     </solution>
     </problem>

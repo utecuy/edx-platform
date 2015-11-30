@@ -2,42 +2,41 @@
 metadata:
     display_name: Text Input
     markdown: |
-        In text input problems, also known as "fill-in-the-blank" problems, learners enter text into a response field. The text can include letters and characters such as punctuation marks. The text that the learner enters must match your specified answer text exactly. You can specify more than one correct answer. Learners must enter a response that matches one of the correct answers exactly.
-        
-        When you add the problem, be sure to select Settings to specify a Display Name and other values that apply.
+        El problema Entrada de Texto, los estudiantes ingresan un texto en el campo de respuesta. El texto puede incluir letras y caracteres como punto y coma. El texto que ingresa el estudiante debe ser exactamente igual al que tu especificas como respuesta. Tu puedes especificar mas de un texto como respuesta correcta.
 
-        You can use the following example problem as a model.
+        Cuando agregues un problema, asegurate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-        >>What was the first post-secondary school in China to allow both male and female students?<<
+        Puedes usar el siguiente problema como ejemplo como modelo.
+
+        >>¿Cuál fue la primera escuela post-secundaria en China en admitir estudiantes Hombres y Mujeres?<<
 
         = Nanjing Higher Normal Institute
         or= National Central University
         or= Nanjing University
 
         [explanation]
-        Nanjing Higher Normal Institute first admitted female students in 1920.
+        Nanjing Higher Normal Institute fue el primero en admitir Mujeres en 1920.
         [explanation]
 
 data: |
     <problem>
-    <p>In text input problems, also known as "fill-in-the-blank" problems, 
-    learners enter text into a response field. The text that the learner enters 
-    must match your specified answer text exactly. You can specify more than 
-    one correct answer. Learners must enter a response that matches one of the 
-    correct answers exactly.</p>
-    <p>When you add the problem, be sure to select <strong>Settings</strong> 
-    to specify a <strong>Display Name</strong> and other values that apply.</p>
-    <p> You can use the following example problem as a model.</p>
-      <p>What was the first post-secondary school in China to allow both male and female students?</p>
+    <p>El problema Entrada de Texto, los estudiantes ingresan un texto en el campo de respuesta.
+    El texto puede incluir letras y caracteres como punto y coma.
+    El texto que ingresa el estudiante debe ser exactamente igual al que tu especificas como respuesta.
+    Tu puedes especificar mas de un texto como respuesta correcta.</p>
+    <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
+     del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
+    <p>Puedes usar el siguiente problema como ejemplo como modelo.</p>
+      <p>¿Cuál fue la primera escuela post-secundaria en China en admitir estudiantes Hombres y Mujeres?</p>
       <stringresponse answer="Nanjing Higher Normal Institute" type="ci" >
         <additional_answer>National Central University</additional_answer>
         <additional_answer>Nanjing University</additional_answer>
-        <textline label="What was the first post-secondary school in China to allow both male and female students?" size="40"/>
+        <textline label="¿Cuál fue la primera escuela post-secundaria en China en admitir estudiantes Hombres y Mujeres?" size="40"/>
       </stringresponse>
     <solution>
       <div class="detailed-solution">
-        <p>Explanation</p>
-        <p>Nanjing Higher Normal Institute first admitted female students in 1920.</p>
+        <p>Explicación</p>
+        <p>Nanjing Higher Normal Institute fue el primero en admitir Mujeres en 1920.</p>
       </div>
     </solution>
     </problem>
