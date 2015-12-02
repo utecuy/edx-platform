@@ -1,54 +1,52 @@
 ---
 metadata:
-    display_name: Text Input with Hints and Feedback
-    markdown: | 
+    display_name: Entrada Numerica con Pistas y Feedback
+    markdown: |
 
-        You can provide feedback for the correct answer in text input problems, as well as for specific incorrect answers.
+        Puedes proveer pistas y feedback para respuestas correctas en el problema de entrada de texto, también puedes proveer feedback para respuestas incorrectas.
 
-        Use feedback on expected incorrect answers to address common misconceptions and to provide guidance on how to arrive at the correct answer.
+        Usa el feedback para respuestas incorrectas comunes, para abordar conceptos erróneos y ayudar al estudiante a llegar a la respuesta correcta.
 
-        Be sure to select Settings to specify a Display Name and other values that apply.
+        Cuando agregues un problema, asegúrate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-        Use the following example problem as a model.
+        Puedes usar el siguiente problema de ejemplo como modelo.
 
-        >>Which U.S. state has the largest land area?<<
+        >>¿Que estado de EEUU tiene la mayor superficie?<<
 
-        =Alaska {{Alaska is 576,400 square miles, more than double the land area
-        of the second largest state, Texas.}}
+        =Alaska {{La superficie de Alaska es de 576,400 millas cuadradas, más del doble de la superficie terrestre del segundo estado más grande, Texas.}}
 
-        not=Texas {{While many people think Texas is the largest state, it is actually the second largest, with 261,797 square miles.}}
+        not=Texas {{Si bien mucha gente piensa que Texas es el estado más grande, en realidad es el segundo más grande, con una superficie de 261,797 millas cuadradas.}}
 
-        not=California {{California is the third largest state, with 155,959 square miles.}}
+        not=California {{California es el tercer estado más grande, con una superficie de 155,959 millas cuadradas.}}
 
-        ||Consider the square miles, not population.||
-        ||Consider all 50 states, not just the continental United States.||
+        ||Considera las millas cuadradas, no población.||
+        ||Considera los 50 estados, No solo EEUU continental.||
 
 tab: hint
 data: |
   <problem>
 
-    <p>You can provide feedback for the correct answer in text input problems, as well as for specific incorrect answers.</p>
+    <p>Puedes proveer pistas y feedback para respuestas correctas en el problema de entrada de texto, también puedes proveer feedback para respuestas incorrectas.</p>
+    <p>Usa el feedback para respuestas incorrectas comunes, para abordar conceptos erróneos y ayudar al estudiante a llegar a la respuesta correcta.</p>
+    <p>Cuando agregues un problema, asegúrate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.</p>
+    <p>Puedes usar el siguiente problema de ejemplo como modelo.</p>
 
-    <p>Use feedback on expected incorrect answers to address common misconceptions and to provide guidance on how to arrive at the correct answer.</p>
-
-    <p>Use the following example problem as a model.</p>
- 
-    <p>Which U.S. state has the largest land area?</p>
+    <p>¿Que estado de EEUU tiene la mayor superficie?</p>
 
     <stringresponse answer="Alaska" type="ci" >
 
-    <correcthint>Alaska is 576,400 square miles, more than double the land area of the second largest state, Texas.</correcthint>
+    <correcthint>La superficie de Alaska es de 576,400 millas cuadradas, más del doble de la superficie terrestre del segundo estado más grande, Texas.</correcthint>
 
-    <stringequalhint answer="Texas">While many people think Texas is the largest state, it is actually the second largest, with 261,797 square miles.</stringequalhint>
+    <stringequalhint answer="Texas">Si bien mucha gente piensa que Texas es el estado más grande, en realidad es el segundo más grande, con una superficie de 261,797 millas cuadradas.</stringequalhint>
 
-    <stringequalhint answer="California">California is the third largest state, with 155,959 square miles.</stringequalhint>
+    <stringequalhint answer="California">California es el tercer estado más grande, con una superficie de 155,959 millas cuadradas.</stringequalhint>
 
-    <textline label="Which U.S. state has the largest land area?" size="20"/>
+    <textline label="¿Que estado de EEUU tiene la mayor superficie?" size="20"/>
     </stringresponse>
 
     <demandhint>
-      <hint>Consider the square miles, not population.</hint>
-      <hint>Consider all 50 states, not just the continental United States.</hint>
+      <hint>Considera las millas cuadradas, no población.</hint>
+      <hint>Considera los 50 estados, No solo EEUU continental.</hint>
     </demandhint>
 
   </problem>

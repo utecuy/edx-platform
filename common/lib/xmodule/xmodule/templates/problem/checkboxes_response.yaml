@@ -6,7 +6,7 @@ metadata:
 
        Cuando agregues un problema, asegurate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-       Puedes usar el siguiente problema como ejemplo como modelo.
+       Puedes usar el siguiente problema de ejemplo como modelo.
 
        >>Los siguientes lenguajes pertenecen a la familia indoeuropea:<<
        [x] Urdu
@@ -26,7 +26,7 @@ data: |
         <p>El problema de Casillas de Verificación permite a los estudiantes seleccionar múltiples opciones. Los estudiantes ven todas las opciones debajo de la letra del problema.</p>
         <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
          del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
-        <p>Puedes usar el siguiente problema como ejemplo como modelo.</p>
+        <p>Puedes usar el siguiente problema de ejemplo como modelo.</p>
           <p>Los siguientes lenguajes pertenecen a la familia indoeuropea:</p>
           <choiceresponse>
             <checkboxgroup direction="vertical">

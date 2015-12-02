@@ -1,54 +1,55 @@
 ---
 metadata:
-    display_name: Numerical Input with Hints and Feedback
+    display_name: Entrada Numérica con Pistas y Feedback
     markdown: |
-        
-        You can provide feedback for correct answers in numerical input problems. You cannot provide feedback for incorrect answers.
 
-        Use feedback for the correct answer to reinforce the process for arriving at the numerical value.
+        Puedes proveer pistas y feedback para respuestas correctas en el problema de entrada numérica. No puedes proveer feedback para respuestas incorrectas.
 
-        You can also add hints for learners.
+        Usa el feedback en la respuesta correcta para reforzar el proceso para llegar al valor numérico correcto.
 
-        Be sure to select Settings to specify a Display Name and other values that apply.
+        También puedes añadir pistas para los estudiantes.
 
-        Use the following example problem as a model.
+        Cuando agregues un problema, asegúrate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-        >>What is the arithmetic mean for the following set of numbers? (1, 5, 6, 3, 5)<<
+        Puedes usar el siguiente problema de ejemplo como modelo.
 
-        = 4 {{The mean for this set of numbers is 20 / 5, which equals 4.}}
+        >>¿Cuál es el promedio para el siguiente conjunto de números? (1, 5, 6, 3, 5)<<
 
-        ||The mean is calculated by summing the set of numbers and dividing by n.||
-        ||n is the count of items in the set.||
+        = 4 {{El promedio de este conjunto de números es 20 / 5, que es igual a 4.}}
+
+        ||El promedio es calculado sumando el conjunto de números y dividiéndolo n.||
+        ||n es la cantidad de elementos en el conjunto.||
 
         [explanation]
-        The mean is calculated by summing the set of numbers and dividing by n. In this case: (1 + 5 + 6 + 3 + 5) / 5 = 20 / 5 = 4.
+        El promedio es calculado sumando el conjunto de numeros y dividiendolo entre n. En este caso: (1 + 5 + 6 + 3 + 5) / 5 = 20 / 5 = 4
         [explanation]
 
 tab: hint
 data: |
     <problem>
-    
-    <p>You can provide feedback for correct answers in numerical input problems. You cannot provide feedback for incorrect answers.</p>
 
-    <p>Use feedback for the correct answer to reinforce the process for arriving at the numerical value.</p>
+    <p>Puedes proveer pistas y feedback para respuestas correctas en el problema de entrada numérica. No puedes proveer feedback para respuestas incorrectas.</p>
 
-    <p>Use the following example problem as a model.</p>
+    <p>Usa el feedback en la respuesta correcta para reforzar el proceso para llegar al valor numérico correcto.</p>
 
-    <p>What is the arithmetic mean for the following set of numbers? (1, 5, 6, 3, 5)</p>
+    <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
+     del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
+
+    <p>¿Cuál es el promedio para el siguiente conjunto de números? (1, 5, 6, 3, 5)</p>
     <numericalresponse answer="4">
-      <formulaequationinput label="What is the arithmetic mean for the following set of numbers? (1, 5, 6, 3, 5)" />
-      <correcthint>The mean for this set of numbers is 20 / 5, which equals 4.</correcthint>
+      <formulaequationinput label="¿Cuál es el promedio para el siguiente conjunto de números? (1, 5, 6, 3, 5)" />
+      <correcthint>El promedio de este conjunto de números es 20 / 5, que es igual a 4.</correcthint>
     </numericalresponse>
 
     <solution>
       <div class="detailed-solution">
-        <p>Explanation</p>
-        <p>The mean is calculated by summing the set of numbers and dividing by n. In this case: (1 + 5 + 6 + 3 + 5) / 5 = 20 / 5 = 4.</p>
+        <p>Explicación</p>
+        <p>El promedio es calculado sumando el conjunto de numeros y dividiendolo entre n. En este caso: (1 + 5 + 6 + 3 + 5) / 5 = 20 / 5 = 4</p>
       </div>
     </solution>
 
     <demandhint>
-      <hint>The mean is calculated by summing the set of numbers and dividing by n.</hint>
-      <hint>n is the count of items in the set.</hint>
+      <hint>El promedio es calculado sumando el conjunto de números y dividiéndolo n.</hint>
+      <hint>n es la cantidad de elementos en el conjunto.</hint>
     </demandhint>
     </problem>

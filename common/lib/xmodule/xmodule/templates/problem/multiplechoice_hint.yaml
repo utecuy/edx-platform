@@ -1,46 +1,46 @@
 ---
 metadata:
-    display_name: Multiple Choice with Hints and Feedback
+    display_name: Opción Multiple con pistas y Feedback
     markdown: |
 
-       You can provide feedback for each option in a multiple choice problem.
+       Puedes proveer feedback por cada opción disponible en el problema de opción multiple.
 
-       You can also add hints for learners.
+       También puedes añadir pistas para los estudiantes.
 
-       Be sure to select Settings to specify a Display Name and other values that apply.
+       Cuando agregues un problema, asegúrate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-       Use the following example problem as a model.
+       Puedes usar el siguiente problema de ejemplo como modelo.
 
-       >>Which of the following is a vegetable?<<
-       ( ) apple {{An apple is the fertilized ovary that comes from an apple tree and contains seeds, meaning it is a fruit.}}
-       ( ) pumpkin {{A pumpkin is the fertilized ovary of a squash plant and contains seeds, meaning it is a fruit.}}
-       (x) potato {{A potato is an edible part of a plant in tuber form and is a vegetable.}}
-       ( ) tomato {{Many people mistakenly think a tomato is a vegetable. However, because a tomato is the fertilized ovary of a tomato plant and contains seeds, it is a fruit.}}
+       >>¿Cuál de los siguientes es un vegetal?<<
+       ( ) manzana {{La manzana es el ovario fertilizado de un árbol de manzana y contiene semillas, por lo tanto es una fruta.}}
+       ( ) calabaza {{La calabaza es el ovario fertilizado de una planta de calabaza y contiene semillas, por lo tanto es una fruta.}}
+       (x) papa {{La papa es una parte comestible de una planta en forma de tubérculo y es un vegetal.}}
+       ( ) tomate {{Muchas veces se confunde el tomate con un vegetal. Sin embargo, como el tomate es un ovario fertilizado de la planta de tomate y contiene semillas, por lo tanto es una fruta.}}
 
-       ||A fruit is the fertilized ovary from a flower.||
-       ||A fruit contains seeds of the plant.||
+       ||La fruta es el ovario fertilizado de una planta.||
+       ||La fruta contiene semillas de la planta.||
 
 tab: hint
 data: |
    <problem>
-     
-     <p>You can provide feedback for each option in a multiple choice problem.</p>
 
-     <p>You can also add hints for learners.</p>
+     <p>Puedes proveer feedback por cada opción disponible en el problema de opción multiple.</p>
+     <p> También puedes añadir pistas para los estudiantes.</p>
+     <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
+      del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
+     <p>Puedes usar el siguiente problema de ejemplo como modelo.</p>
 
-     <p>Use the following example problem as a model.</p>
-
-     <p>Which of the following is a vegetable?</p>
+     <p>¿Cuál de los siguientes es un vegetal?</p>
      <multiplechoiceresponse>
        <choicegroup type="MultipleChoice">
-         <choice correct="false">apple <choicehint>An apple is the fertilized ovary that comes from an apple tree and contains seeds, meaning it is a fruit.</choicehint></choice>
-         <choice correct="false">pumpkin <choicehint>A pumpkin is the fertilized ovary of a squash plant and contains seeds, meaning it is a fruit.</choicehint></choice>
-         <choice correct="true">potato <choicehint>A potato is an edible part of a plant in tuber form and is a vegetable.</choicehint></choice>
-         <choice correct="false">tomato <choicehint>Many people mistakenly think a tomato is a vegetable. However, because a tomato is the fertilized ovary of a tomato plant and contains seeds, it is a fruit.</choicehint></choice>
+         <choice correct="false">manzana <choicehint>La manzana es el ovario fertilizado de un árbol de manzana y contiene semillas, por lo tanto es una fruta.</choicehint></choice>
+         <choice correct="false">calabaza <choicehint>La calabaza es el ovario fertilizado de una planta de calabaza y contiene semillas, por lo tanto es una fruta.</choicehint></choice>
+         <choice correct="true">papa <choicehint>La papa es una parte comestible de una planta en forma de tubérculo y es un vegetal.</choicehint></choice>
+         <choice correct="false">tomate <choicehint>Muchas veces se confunde el tomate con un vegetal. Sin embargo, como el tomate es un ovario fertilizado de la planta de tomate y contiene semillas, por lo tanto es una fruta.</choicehint></choice>
        </choicegroup>
      </multiplechoiceresponse>
      <demandhint>
-       <hint>A fruit is the fertilized ovary from a flower.</hint>
-       <hint>A fruit contains seeds of the plant.</hint>
+       <hint>La fruta es el ovario fertilizado de una planta.</hint>
+       <hint>La fruta contiene semillas de la planta.</hint>
      </demandhint>
      </problem>

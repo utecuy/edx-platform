@@ -6,7 +6,7 @@ metadata:
 
          Cuando agregues un problema, asegurate de especificar en la configuración del mismo el nombre del problema y los valores que apliquen.
 
-         Puedes usar el siguiente problema como ejemplo como modelo.
+         Puedes usar el siguiente problema de ejemplo como modelo.
 
          >>¿Cual de los siguientes países festeja su independencia el 15 de Agosto?<<
 
@@ -20,7 +20,7 @@ data: |
     <p>El problema Desplegar permite a los estudiantes seleccionar solo una opción de una lista de opciones.</p>
     <p>Cuando agregues un problema, asegurate de especificar en la <strong>configuración</strong>
      del mismo el <strong>Nombre para mostrar</strong> del problema y los valores que apliquen.</p>
-    <p>Puedes usar el siguiente problema como ejemplo como modelo.</p>
+    <p>Puedes usar el siguiente problema de ejemplo como modelo.</p>
       <p>¿Cual de los siguientes países festeja su independencia el 15 de Agosto?</p>
       <br/>
       <optionresponse>
