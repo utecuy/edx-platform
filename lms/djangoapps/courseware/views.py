@@ -906,7 +906,8 @@ def course_about(request, course_id):
             'disable_courseware_header': True,
             'can_add_course_to_cart': can_add_course_to_cart,
             'cart_link': reverse('shoppingcart.views.show_cart'),
-            'pre_requisite_courses': pre_requisite_courses
+            'pre_requisite_courses': pre_requisite_courses,
+            'utec_show_social_buttons': settings.FEATURES.get('UTEC_SHOW_SOCIAL_BUTTONS', True)
         })
 
 
