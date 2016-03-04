@@ -70,12 +70,11 @@ def login_and_registration_form(request, initial_mode="login"):
     #
     # @melvinsoft we add an exception if UTEC_THIRD_PARTY_AUTH_PRIORITY is True,
     # because we want for now that login be via Shibboleth only.
-    if not settings.FEATURES['UTEC_THIRD_PARTY_AUTH_PRIORITY'] or settings.FEATURES['UTEC_THIRD_PARTY_AUTH_PRIORITY'] == False:
-        if microsite.is_request_in_microsite():
-            if initial_mode == "login":
-                return old_login_view(request)
-            elif initial_mode == "register":
-                return old_register_view(request)
+    if microsite.is_request_in_microsite():
+        if initial_mode == "login":
+            return old_login_view(request)
+        elif initial_mode == "register":
+            return old_register_view(request)
 
     # Allow external auth to intercept and handle the request
     ext_auth_response = _external_auth_intercept(request, initial_mode)
