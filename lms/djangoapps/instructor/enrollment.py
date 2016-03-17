@@ -296,6 +296,11 @@ def get_email_params(course, auto_enroll, secure=True):
             site=stripped_site_name,
             path=reverse('about_course', kwargs={'course_id': course.id.to_deprecated_string()})
         )
+    login_url = u'{proto}://{site}{path}'.format(
+        proto=protocol,
+        site=stripped_site_name,
+        path=reverse('signin_user')
+    )
 
     is_shib_course = uses_shib(course)
 
@@ -308,6 +313,7 @@ def get_email_params(course, auto_enroll, secure=True):
         'course_url': course_url,
         'course_about_url': course_about_url,
         'is_shib_course': is_shib_course,
+        'login_url': login_url,
     }
     return email_params
 
@@ -328,6 +334,7 @@ def send_mail_to_student(student, param_dict, language=None):
         `full_name`: student full name (a `str`)
         `message`: type of email to send and template to use (a `str`)
         `is_shib_course`: (a `boolean`)
+        'login_url': the login url (a `str`)
     ]
 
     `language` is the language used to render the email. If None the language
