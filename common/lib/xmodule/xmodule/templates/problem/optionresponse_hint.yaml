@@ -23,7 +23,7 @@ metadata:
         ||La fruta es el ovario fertilizado de una planta.||
         ||La fruta contiene semillas de la planta.||
 
-tab: hint
+hinted: true
 data: |
     <problem>
 

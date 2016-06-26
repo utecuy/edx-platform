@@ -27,7 +27,7 @@ metadata:
       ||La fruta contiene semillas de la planta.||
 
 
-tab: hint
+hinted: true
 data: |
       <problem>
 
