@@ -22,7 +22,7 @@ metadata:
         ||Considera las millas cuadradas, no población.||
         ||Considera los 50 estados, No solo EEUU continental.||
 
-tab: hint
+hinted: true
 data: |
   <problem>
 

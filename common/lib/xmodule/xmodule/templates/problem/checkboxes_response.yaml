@@ -29,7 +29,7 @@ data: |
         <p>Puedes usar el siguiente problema de ejemplo como modelo.</p>
           <p>Los siguientes lenguajes pertenecen a la familia indoeuropea:</p>
           <choiceresponse>
-            <checkboxgroup direction="vertical">
+            <checkboxgroup>
               <choice correct="true" name="urdu">Urdu</choice>
               <choice correct="false" name="finnish">Finlandés</choice>
               <choice correct="true" name="marathi">Marathi</choice>
