@@ -28,7 +28,6 @@
                 this.currentProvider = data.thirdPartyAuth.currentProvider || '';
                 this.errorMessage = data.thirdPartyAuth.errorMessage || '';
                 this.platformName = data.platformName;
-                this.utecThirdPartyAuthPriority = data.utecThirdPartyAuthPriority;
                 this.resetModel = data.resetModel;
 
                 this.listenTo( this.model, 'sync', this.saveSuccess );

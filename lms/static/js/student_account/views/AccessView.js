@@ -74,7 +74,6 @@
                 };
 
                 this.platformName = options.platform_name;
-                this.utecThirdPartyAuthPriority = obj.utecThirdPartyAuthPriority;
 
                 // The login view listens for 'sync' events from the reset model
                 this.resetModel = new PasswordResetModel({}, {
@@ -126,7 +125,6 @@
                         resetModel: this.resetModel,
                         thirdPartyAuth: this.thirdPartyAuth,
                         platformName: this.platformName,
-                        utecThirdPartyAuthPriority: this.utecThirdPartyAuthPriority
                     });
 
                     // Listen for 'password-help' event to toggle sub-views
@@ -164,7 +162,6 @@
                         model: model,
                         thirdPartyAuth: this.thirdPartyAuth,
                         platformName: this.platformName,
-                        utecThirdPartyAuthPriority: this.utecThirdPartyAuthPriority
                     });
 
                     // Listen for 'auth-complete' event so we can enroll/redirect the user appropriately.
@@ -186,7 +183,6 @@
                         thirdPartyAuth: this.thirdPartyAuth,
                         hintedProvider: this.thirdPartyAuthHint,
                         platformName: this.platformName,
-                        utecThirdPartyAuthPriority: this.utecThirdPartyAuthPriority
                     });
 
                     this.subview.hintedLogin.render();
