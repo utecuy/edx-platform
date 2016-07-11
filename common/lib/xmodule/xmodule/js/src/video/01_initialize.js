@@ -14,16 +14,9 @@
 
 define(
 'video/01_initialize.js',
-<<<<<<< HEAD
-['video/03_video_player.js', 'video/00_i18n.js'],
-function (VideoPlayer, i18n) {
-    var moment = window.moment;
-
-=======
 ['video/03_video_player.js', 'video/00_i18n.js', 'moment'],
 function (VideoPlayer, i18n, moment) {
     var moment = moment || window.moment;
->>>>>>> named-release/dogwood.rc
     /**
      * @function
      *
@@ -602,15 +595,11 @@ function (VideoPlayer, i18n, moment) {
                     '[Video info]: YouTube returned an error for ' +
                     'video with id "' + self.id + '".'
                 );
-<<<<<<< HEAD
-                self.loadHtmlPlayer();
-=======
                 // If the video is already loaded in `_waitForYoutubeApi` by the
                 // time we get here, then we shouldn't load it again.
                 if (!self.htmlPlayerLoaded) {
                     self.loadHtmlPlayer();
                 }
->>>>>>> named-release/dogwood.rc
             });
 
             window.Video.loadYouTubeIFrameAPI(scriptTag);
