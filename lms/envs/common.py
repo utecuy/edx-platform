@@ -1447,9 +1447,9 @@ PIPELINE_CSS = {
     },
     'style-discussion-main': {
         'source_filenames': [
-            'css/discussion/lms-discussion-main.css',
+            'css/lms-discussion.css',
         ],
-        'output_filename': 'css/discussion/lms-discussion-main.css',
+        'output_filename': 'css/lms-discussion.css',
     },
     'style-discussion-main-rtl': {
         'source_filenames': [
